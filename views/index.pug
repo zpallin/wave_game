@@ -1,0 +1,12 @@
+doctype html
+html(lang="en")
+  head
+    title=title
+    link(rel='stylesheet', href='/css/style.css', type='text/css')
+  body
+    div#container
+      h1=title
+      div=message
+      canvas#myCanvas(width=600,height=500)
+    script(src='/js/socket.io.min.js')
+    script(src='/js/web_fighter.js')
