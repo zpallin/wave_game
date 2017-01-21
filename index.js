@@ -19,7 +19,7 @@ app.use(express.static('static'));
 // server
 
 app.get('/', function(req, res) {
-  res.render('index', { title: 'Web Fighter', message: 'hello'});
+  res.render('index', { title: 'Wave IO', message: 'hello'});
 });
 
 server.listen(config.port, function() {
@@ -34,13 +34,13 @@ io.sockets.on('connection', function(socket) {
     for (var p in players) {
       var player = players[p];
       if (player.keycode === data.keycode) {
-        console.log("update player: "+player.keycode);
         players[p] = data;
-        return;
+        break;
       }
     }
+    console.log('player update');
     players.push(data);
-    players = players.filter(function(n){ return n != undefined }); 
-    socket.broadcast.emit('players', { 'players': [data] });
+    // players = players.filter(function(n){ return n != undefined }); 
+    socket.broadcast.emit('players', data);
   });
 });
