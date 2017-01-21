@@ -1,4 +1,30 @@
 ////////////////////////////////////////////////////////////////////////////////
+// camera
+
+function Camera(ctx, canvas, entity) {
+  this.ctx = ctx;
+  this.canvas = canvas;
+  this.entity = entity;
+  this.x = 0;
+  this.y = 0;
+  this.w = this.canvas.width;
+  this.h = this.canvas.height;
+  this.lerp = 8;
+}
+Camera.prototype.focus = function() {
+  this.ctx.translate(
+    -this.x + this.w / 2,
+    -this.y + this.h / 2
+  );
+}
+Camera.prototype.follow = function(dt) {
+  dt = typeof dt === 'undefined' ? 0 : dt;
+  // transform camera x, y toward entity x, y
+  this.x += (this.entity.x - this.x) * this.lerp * dt;
+  this.y += (this.entity.y - this.y) * this.lerp * dt;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // render object for rendering stuff onto the canvas
 
 function RenderColor(ctx, h, w, colors, tpf) {
@@ -27,6 +53,9 @@ function RenderColor(ctx, h, w, colors, tpf) {
 }
 // simple rectangle draw based on simple things
 RenderColor.prototype.rectLoop = function(x, y) {
+
+  x = typeof x === 'undefined' ? 0 : x;
+  y = typeof y === 'undefined' ? 0 : y;
 
   // doing this first makes sure it always stays under the index
   this.iter = this.iter % this.colors.length;
