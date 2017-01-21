@@ -9,7 +9,7 @@ function Camera(ctx, canvas, entity) {
   this.y = 0;
   this.w = this.canvas.width;
   this.h = this.canvas.height;
-  this.lerp = 0.8;
+  this.lerp = 8;
 }
 Camera.prototype.focus = function() {
   this.ctx.translate(
