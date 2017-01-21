@@ -92,7 +92,8 @@ function run() {
     update();
     render(dt);
     last = now;
-    window.setTimeout(frame, 1000 / 60);
+    //window.setTimeout(frame, 1000 / 60);
+    window.requestAnimationFrame(frame);
   }
 
   frame();
