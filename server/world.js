@@ -1,6 +1,7 @@
 'use strict';
 
 const generateUniqueId = require('./entity/entity_base').generateUniqueId;
+const FoodEntity = require('./entity/entity_food').FoodEntity;
 
 const TILE_SIZE = 50;
 const WORLD_GRID_WIDTH = 100;
