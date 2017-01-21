@@ -1,13 +1,22 @@
 'use strict';
 
-const EntityBase = require('./entity_base');
+const EntityBase = require('./entity_base').EntityBase;
 
 class PlayerEntity extends EntityBase {
-  constructor() {
+  constructor(world, io) {
+    super(world, io);
 
+    this.io.emit('set_identity', this.id);
+
+    this.io.on('player_move', this.setPos.bind(this));
+    this.io.on('disconnect', this.destroy.bind(this));
   }
-  
-  update() {
 
+  update(elapsed) {
+    super.update(elapsed);
   }
 }
+
+module.exports = {
+  PlayerEntity: PlayerEntity
+};

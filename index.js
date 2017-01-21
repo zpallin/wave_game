@@ -8,12 +8,20 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
+const PlayerEntity = require('./server/entity/entity_player').PlayerEntity;
+let entityMap = require('./server/entity/entity_base').entityMap;
+const World = require('./server/world').World;
+
+let worldList = [];
 
 ////////////////////////////////////////////////////////////////////////////////
 // config
 
 app.set('view engine', 'pug');
 app.use(express.static('static'));
+
+// For now, create just one world.
+worldList.push(new World(io));
 
 ////////////////////////////////////////////////////////////////////////////////
 // server
@@ -26,21 +34,9 @@ server.listen(config.port, function() {
   console.log("Listening on "+ config.port);
 });
 
-var players = [];
-
 io.sockets.on('connection', function(socket) {
-  socket.broadcast.emit('user connected');
-  socket.on('playermovement', function(data) {
-    for (var p in players) {
-      var player = players[p];
-      if (player.keycode === data.keycode) {
-        players[p] = data;
-        break;
-      }
-    }
-    console.log('player update');
-    players.push(data);
-    // players = players.filter(function(n){ return n != undefined }); 
-    socket.broadcast.emit('players', data);
-  });
+  // Generate a new player entity and add them into a world
+  let world = worldList[0]; // For now, just pick the first world only.
+
+  new PlayerEntity(world, socket);
 });

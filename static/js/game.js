@@ -1,34 +1,11 @@
 
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
-var players = [];
+var entityList = {};
 var socket = io.connect("/");
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var config = {
-  "players": "0",
-  "player": {
-    "colors": [
-      "#00ff00",
-      "#ff0000",
-      "#0000ff",
-      "#0ff000",
-      "#000ff0",
-      "#f0000f",
-      "#ff0ff0",
-      "#0ff0ff",
-    ],
-    "startX": [
-      0 + 40,
-      canvas.width - 40,
-    ],
-    "default": {
-      "width": 40,
-      "height": 80,
-    },
-  }
-};
 ////////////////////////////////////////////////////////////////////////////////
 
 var player = null;
@@ -60,11 +37,11 @@ var KEYS = [
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function PLAYER(keycode, color) {
+function PLAYER(id, color, pos) {
   // config
-	this.keycode = keycode;
-  this.x = 0;
-  this.y = 0;
+	this.id = id;
+  this.x = pos.x;
+  this.y = pos.y;
   this.color = color;
 
   // static values
@@ -81,16 +58,6 @@ PLAYER.prototype.goto = function(x,y) {
 PLAYER.prototype.move = function(x,y) {
   this.x += typeof x === 'undefined' ? 0 : x;
   this.y += typeof y === 'undefined' ? 0 : y;
-}
-PLAYER.prototype.data = function() {
-	return {
-		keycode: this.keycode,
-		x: this.x,
-		y: this.y,
-		w: this.w,
-		h: this.h,
-		color: this.color,
-	};
 }
 
 function drawPlayer(x,y,w,h,c) {
@@ -110,9 +77,9 @@ function renderBackground() {
 }
 
 function renderPlayers() {
-  for (var p in players) {
-    players[p].draw();
-  } 
+  for (var p in entityList) {
+    entityList[p].draw();
+  }
 }
 
 function renderPlayer() {
@@ -123,25 +90,6 @@ function render() {
   renderBackground();
   renderPlayer();
   renderPlayers();
-}
-
-function randomKeyCode() {
-	var text = "";
-	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-	for( var i=0; i < 5; i++ )
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-	return text;
-}
-
-function reset() {
-  players = [];
-  for (var i = 0; i < config.players; i++) {
-    players[i] = new PLAYER(randomKeyCode(), config.player.colors[i+1]);
-    players[i].goto(canvas.width / 2, canvas.height * 0.8);
-  }
-  player = new PLAYER(randomKeyCode(), config.player.colors[0]);
 }
 
 function setKeyListener(keys) {
@@ -180,23 +128,7 @@ function update() {
   }
   
   player.move(x,y);
-	socket.emit('playermovement', player.data());
-
-	// now get the data
-	socket.on('players', function(data) {
-/*
-		for (var i = 0; i < data.players.length; i++) {
-			var other = data.players[i];
-			console.log(JSON.stringify(other));
-			if (other.keycode === player.keycode) {
-				continue;
-			}
-			var color = config.player.colors[i % config.player.colors.length];
-			drawPlayer(other.x, other.y, other.w, other.h, other.color);
-		}
-*/
-		console.log("players");
-	});
+	socket.emit('player_move', {x: player.x, y: player.y});
 }
 
 function run() {
@@ -206,7 +138,6 @@ function run() {
   var gdt = 0;
 
 	setKeyListener(KEYS);
-  reset();
   function frame() {
     now = new Date().getTime();
     dt = Math.min(1, (now - last) / 1000);
@@ -218,7 +149,33 @@ function run() {
     window.setTimeout(frame, 1000 / 60);
   }
 
-  frame();
+  // new entity connected
+  socket.on('entity_connected', function(entityData) {
+    entity = new PLAYER(entityData.id, entityData.color, entityData.pos);
+    entityList[entityData.id] = entity;
+  });
+
+  // existing entity left the game.
+  socket.on('entity_disconnected', function(id) {
+    delete entityList[id];
+  });
+
+  // Your identifier
+  socket.on('set_identity', function(id) {
+    player = entityList[id];
+
+    // Now that we know who we are, let's start playing!
+    frame();
+  });
+
+  // now get the data
+  socket.on('entity_moved', function(entityData) {
+    var entity = entityList[entityData.id];
+    if (entity) {
+      entity.x = entityData.pos.x;
+      entity.y = entityData.pos.y;
+    }
+  });
 }
 
 run();
