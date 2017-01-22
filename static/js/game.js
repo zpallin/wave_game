@@ -20,6 +20,7 @@ function render() {
 function update(dt) {
   camera.follow(dt);
   water.update(dt);
+  fog.update(dt);
   for (var layer = 0; layer < entityLayers.length; ++layer) {
     var map = entityLayers[layer];
     for (var id in map) {
