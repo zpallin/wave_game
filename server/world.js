@@ -172,8 +172,8 @@ class World {
             // The first test is checking within a square on the x and y distance.
             let w = Math.abs(entity.pos.x - pos.x);
             let h = Math.abs(entity.pos.y - pos.y);
-            if (w - entity.radius > maxRange || w + entity.radius < minRange ||
-                h - entity.radius > maxRange || h + entity.radius < minRange) {
+            if (w - (entity.size/2) > maxRange || w + (entity.size/2) < minRange ||
+                h - (entity.size/2) > maxRange || h + (entity.size/2) < minRange) {
               return;
             }
 

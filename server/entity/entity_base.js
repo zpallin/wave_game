@@ -35,7 +35,7 @@ class EntityBase {
     this.id = generateUniqueId(entityMap);
     this.io = io; // sockets
     this.pos = {x: 0, y: 0};
-    this.radius = 15; // Pixel radius of entity
+    this.size = 30; // Pixel size of entity
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
     this.world = world; // The world instance this entity is in
     this.world.addEntity(this);
@@ -59,8 +59,7 @@ class EntityBase {
   clientData() {
     return {
       id:     this.id,
-      pos:    this.pos,
-      radius: this.radius,
+      size:   this.size,
       color:  this.color
     };
   }
