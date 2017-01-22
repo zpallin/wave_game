@@ -3,7 +3,7 @@
 
 function Player(entity, speed) {
   this.pos = entity.pos;
-  this.speed = typeof speed === 'undefined' ? 10 : speed;
+  this.speed = typeof speed === 'undefined' ? 8 : speed;
   
   this.left = false;
   this.down = false;
