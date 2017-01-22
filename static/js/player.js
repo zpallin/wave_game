@@ -40,9 +40,9 @@ Player.prototype.reset = function() {
 }
 
 Player.prototype.move = function() {
-	var newState = this.entity.state;
+	var newState = 'idle';
 
-	if (newState != 'burrow') {
+	if (this.entity.state != 'burrow') {
 
 		if (this.left) {
 			this.pos.x -= this.speed;
