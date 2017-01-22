@@ -11,6 +11,9 @@ function Player(entity, speed) {
   this.up = false;
 	this.burrow = false;
   this.entity = entity;
+  this.attackFrameStart = 2;
+  this.resetAttack();
+  this.runThrough = ['burrow', 'attackRight', 'attackLeft'];
 }
 
 Player.prototype.modSpeed = function() {
@@ -19,6 +22,43 @@ Player.prototype.modSpeed = function() {
 
 Player.prototype.updateControls = function(dt, bounds) {
   this.move(bounds);
+  this.attack(dt);
+}
+
+Player.prototype.attack = function(dt) {
+  if (this.attackRight) {
+    var animIdx = this.entity.anims['attackLeft'].idx;
+    console.log('animIdx: ' + animIdx);
+
+    if (animIdx >= this.attackFrameStart) {
+      console.log('rightattack');
+      socket.emit('player_attack_zone', {
+        x: this.pos.x + this.pos.w / 2,
+        y: this.pos.y + this.pos.h / 2,
+        w: this.pos.w / 6,
+        h: this.pos.h / 6,
+      });
+    }
+
+  }
+  if (this.attackLeft) {
+    var animIdx = this.entity.anims['attackLeft'].idx;
+    console.log('animIdx: ' + animIdx);
+    
+    if (animIdx >= this.attackFrameStart) {
+      console.log('leftattack');
+      socket.emit('player_attack_zone', {
+        x: this.pos.x + this.pos.w / 2,
+        y: this.pos.y + this.pos.h / 2,
+        w: this.pos.w / 6,
+        h: this.pos.h / 6,
+      });
+    }
+  }
+}
+
+Player.prototype.resetAttack = function() {
+  this.attackIncrement = 0;
 }
 
 Player.prototype.render = function() {
@@ -36,8 +76,7 @@ Player.prototype.move = function(bounds) {
     y: this.pos.y
   };
 
-
-	if (newState != 'burrow') {
+	if (this.runThrough.indexOf(newState) === -1) {
 	  newState = 'idle';
 
 		if (this.left) {
@@ -71,7 +110,16 @@ Player.prototype.move = function(bounds) {
 		if (this.burrow) {
 			newState = 'burrow';
 		}
+    if (this.attackRight) {
+      console.log(this.attackRight);
+      newState = 'attackRight';
+    }
+    if (this.attackLeft) {
+      console.log(this.attackLeft);
+      newState = 'attackLeft';
+    }
 	}
+
 
   helpers.clamp(this.pos, bounds);
 

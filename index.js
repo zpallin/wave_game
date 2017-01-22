@@ -43,4 +43,10 @@ io.sockets.on('connection', function(socket) {
   let world = worldList[0]; // For now, just pick the first world only.
 
   new PlayerEntity(world, socket);
+  socket.on('player_attack_zone', function(data) {
+    console.log(data);
+  });
+
 });
+
+

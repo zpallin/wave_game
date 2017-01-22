@@ -20,3 +20,6 @@ hermitIdleRight.src = '/img/hermit_idle_right.png';
 
 var hermitWalkRight = new Image();
 hermitWalkRight.src = '/img/hermit_walk_right.png';
+
+var scratchImg = new Image();
+scratchImg.src = '/img/scratch.png';

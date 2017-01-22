@@ -41,11 +41,24 @@ function reset() {
   keys.register({ keys: [KEY.W], mode: 'down', action: function() { player.up    = true;  } });
   keys.register({ keys: [KEY.S], mode: 'down', action: function() { player.down  = true;  } });
   keys.register({ keys: [KEY.SPACE], mode: 'down', action: function() { player.burrow = true;  } });
+  keys.register({ keys: [KEY.LEFT], mode: 'down', action: function() { 
+    player.attackLeft = true; } 
+  });
+  keys.register({ keys: [KEY.RIGHT], mode: 'down', action: function() { 
+    player.attackRight = true; } 
+  });
   keys.register({ keys: [KEY.A], mode: 'up',   action: function() { player.left  = false; } });
   keys.register({ keys: [KEY.D], mode: 'up',   action: function() { player.right = false; } });
   keys.register({ keys: [KEY.W], mode: 'up',   action: function() { player.up    = false; } });
   keys.register({ keys: [KEY.S], mode: 'up',   action: function() { player.down  = false; } });
   keys.register({ keys: [KEY.SPACE], mode: 'up',   action: function() { player.burrow = false; } });
+  keys.register({ keys: [KEY.LEFT], mode: 'up', action: function() { 
+    player.attackLeft = false; } 
+  });
+  keys.register({ keys: [KEY.RIGHT], mode: 'up', action: function() { 
+    player.attackRight = false; } 
+  });
+
   keys.setListeners();
 }
 
@@ -134,6 +147,8 @@ function run() {
   socket.on('water_height', function(height) {
     water.setHeight(height);
   });
+
+
 }
 
 run();

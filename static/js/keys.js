@@ -8,6 +8,8 @@ var KEY = {
   S: 83,
   W: 87,
   SPACE: 32,
+  LEFT: 37,
+  RIGHT: 39,
 };
 
 // keys manager
@@ -21,6 +23,7 @@ Keys.prototype.register = function(reg) {
     action: reg.action,
   });
 }
+
 // adds event listeners that are registered
 Keys.prototype.setListeners = function() {
   var registry = this.registry;

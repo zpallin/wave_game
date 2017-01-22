@@ -64,6 +64,8 @@ function returnDefaultEntities(type) {
         'rightUp': new Animation( hermitIdleDown, 100, 67),
         'down': new Animation( hermitIdleDown, 100, 67, 15, true),
         'burrow': new Animation( hermitIdleDown, 100, 67, 5, false, false, [1,1,1,1,1,1,1]),
+        'attackLeft': new Animation( hermitWalkRight, 100, 67, 12, true, false, [1,2,3,1]),
+        'attackRight': new Animation( hermitWalkRight, 100, 67, 12, false, false, [1,2,3,1]),
       };
       break;
     case 'FoodEntity': 
@@ -76,4 +78,35 @@ function returnDefaultEntities(type) {
         'idle': new Animation(sandImg, 512, 512)
       }
   }
+}
+        
+////////////////////////////////////////////////////////////////////////////////
+// special entity: scratch
+// NOT BEING USED YET (OR PROBABLY AT ALL)
+var scratches = {};
+function Scratch(x,y,size) {
+  this.x = x;
+  this.y = y;
+  this.w = 30;
+  this.h = 30;
+  this.size = size;
+  this.name = helpers.randomStr();
+  this.anim = new Animation(scratchImg, this.w, this.h, 5, false, false, [0,1,2]);
+  scratches[this.name] = this;
+}
+Scratch.prototype.update = function(dt) {
+  if (!this.anim.update()) {
+    delete scratches[this.name];
+  }
+}
+Scratch.prototype.render = function() {
+  ctx.save();
+  ctx.translate(this.x, this.pos.y - this.pos.h / 2);
+  ctx.scale(this.pos.w / anim.w, this.pos.h / anim.h);
+  anim.draw();
+  ctx.restore();
+}
+
+function callScratch(x,y,size) {
+    
 }
