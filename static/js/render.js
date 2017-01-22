@@ -28,7 +28,7 @@ Camera.prototype.follow = function(dt) {
 ////////////////////////////////////////////////////////////////////////////////
 // render object for rendering stuff onto the canvas
 
-function AnimationColor(colors, pos, loop, tpf) {
+function AnimationColor(colors, pos) {
   this.pos = typeof pos === 'undefined' ? {x:0,y:0,w:50,h:50} : pos;
 
   // iterator
@@ -45,7 +45,7 @@ function AnimationColor(colors, pos, loop, tpf) {
   this.colors = colors;
  
   if (this.colors.length === 0) {
-    this.colors = ["#ff0000"];
+    this.colors = ["#ff0000","#ee0000","#dd0000","#ee0000"];
   }
 
   this.reset();
@@ -53,9 +53,6 @@ function AnimationColor(colors, pos, loop, tpf) {
 
 AnimationColor.prototype.update = function(dt) {
  
-  x = typeof x === 'undefined' ? 0 : x;
-  y = typeof y === 'undefined' ? 0 : y;
-
   // doing this first makes sure it always stays under the index
   this.iter = this.iter % this.colors.length;
   this.tc++;
@@ -74,7 +71,7 @@ AnimationColor.prototype.reset = function() {
 
 AnimationColor.prototype.draw = function() {
   ctx.fillStyle = this.colors[this.iter];
-  ctx.rect(0,0,this.pos.w, this.pos.h);
+  ctx.rect(this.pos.x,this.pos.y,this.pos.w, this.pos.h);
   ctx.fill();
 }
 
