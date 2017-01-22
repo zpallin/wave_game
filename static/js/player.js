@@ -34,7 +34,7 @@ Player.prototype.attack = function(dt) {
           x: this.pos.x + this.pos.w / 2,
           y: this.pos.y + this.pos.h / 2,
           w: this.pos.w / 12,
-          h: this.pos.h / 6,
+          h: this.pos.h,
       });
     }
 
@@ -47,7 +47,7 @@ Player.prototype.attack = function(dt) {
         x: this.pos.x - this.pos.w / 2,
         y: this.pos.y - this.pos.h / 2,
         w: this.pos.w / 12,
-        h: this.pos.h / 6,
+        h: this.pos.h,
       });
     }
   }
