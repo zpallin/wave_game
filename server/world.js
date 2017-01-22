@@ -27,7 +27,7 @@ const WAVE_STATE_RECEEDING = 2;
 const KNOCKBACK_DAMPER = 0.25;
 
 // food amounts
-const FOOD_RAND_MAX = Math.floor(WORLD_GRID_WIDTH * GRID_SIZE / 10);
+const FOOD_RAND_MAX = Math.floor(WORLD_GRID_WIDTH * GRID_SIZE / 100);
 const FOOD_RAND_MIN = Math.floor(FOOD_RAND_MAX / 2);
 
 // Maps for keeping track of things

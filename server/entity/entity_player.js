@@ -29,7 +29,7 @@ class PlayerEntity extends EntityBase {
   addScore(amount) {
     this.score += amount;
 
-    this.setSize(Math.min(this.size + amount, 180));
+    this.setSize(Math.min(this.size + amount * 5, 180));
   }
 
   setState(stateName) {
