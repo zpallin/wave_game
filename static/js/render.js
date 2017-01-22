@@ -71,9 +71,11 @@ AnimationColor.prototype.reset = function() {
 }
 
 AnimationColor.prototype.draw = function() {
+  ctx.beginPath();
   ctx.fillStyle = this.colors[this.iter];
   ctx.rect(this.pos.x,this.pos.y,this.pos.w, this.pos.h);
   ctx.fill();
+  ctx.closePath();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
