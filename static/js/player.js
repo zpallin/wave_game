@@ -31,6 +31,11 @@ Player.prototype.move = function(bounds) {
 	if (newState != 'burrow') {
 	  newState = 'idle';
 
+    var oldPos = {
+      x: this.pos.x,
+      y: this.pos.y
+    };
+
 		if (this.left) {
 			this.pos.x -= this.speed;
 			newState = 'left';
@@ -68,5 +73,8 @@ Player.prototype.move = function(bounds) {
 
   //console.log(this.pos);
 	this.entity.setState(newState);
-  socket.emit('player_move', {x: this.pos.x, y: this.pos.y});
+
+  if (this.pos.x !== oldPos.x || this.pos.y !== oldPos.y) {
+    socket.emit('player_move', {x: this.pos.x, y: this.pos.y});
+  }
 }
