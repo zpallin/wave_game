@@ -46,7 +46,7 @@ function PLAYER(id, color, pos) {
 
   // static values
   this.w = 40;
-  this.h = 80;
+  this.h = 40;
 }
 PLAYER.prototype.draw = function() {
 	drawPlayer(this.x, this.y, this.w, this.h, this.color);
@@ -151,7 +151,7 @@ function run() {
 
   // new entity connected
   socket.on('entity_connected', function(entityData) {
-    entity = new PLAYER(entityData.id, entityData.color, entityData.pos);
+    entity = new PLAYER(entityData.id, entityData.color, {x: -10000, y: -10000});
     entityList[entityData.id] = entity;
   });
 

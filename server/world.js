@@ -14,7 +14,7 @@ const WORLD_GRID_HEIGHT = 20;
 const CAMERA_GRID_WIDTH = 5;
 const CAMERA_GRID_HEIGHT = 5;
 
-const TEMP_VIEW_RANGE = 10;
+const TEMP_VIEW_RANGE = 10000;
 
 // Maps for keeping track of things
 let worldMap = {};
@@ -132,7 +132,7 @@ class World {
     }
 
     let notifyEntityList = this.getEntitiesInRange(
-      entity.pos, 0, TEMP_VIEW_RANGE, false, entity.id);
+      entity.pos, 0, TEMP_VIEW_RANGE, false);
 
     notifyEntityList.forEach((notifyEntity)=> {
       if (notifyEntity.io) {

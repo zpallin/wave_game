@@ -58,9 +58,11 @@ class EntityBase {
   // Retrieve the data needed for a client to know this entity.
   clientData() {
     return {
-      id:     this.id,
-      size:   this.size,
-      color:  this.color
+      id:      this.id,
+      type:    this.constructor.name,
+      variant: 0,
+      size:    this.size,
+      color:   this.color
     };
   }
 
