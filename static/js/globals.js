@@ -6,6 +6,7 @@ var ctx = canvas.getContext('2d');
 var entityMap = {};
 var entityLayers = [{}, {}];
 var assumedEntitySize = 60;
+var world, water, fog;
 
 //images
 var sandImg = new Image();

@@ -23,6 +23,7 @@ Player.prototype.modSpeed = function() {
 Player.prototype.updateControls = function(dt, bounds) {
   this.move(bounds);
   this.attack(dt);
+  this.water();
 }
 
 Player.prototype.attack = function(dt) {
@@ -51,6 +52,13 @@ Player.prototype.attack = function(dt) {
       });
     }
   }
+}
+
+Player.prototype.water = function() {
+  if (water.height > this.pos.y && this.entity.state !== 'burrow') {
+    // emit when hit by wave
+    socket.emit('hit_by_wave', {id: this.entity.id});
+  }  
 }
 
 Player.prototype.resetAttack = function() {

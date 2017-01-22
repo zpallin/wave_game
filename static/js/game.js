@@ -1,4 +1,4 @@
-var player, camera, keys, world, water, fog;
+var player, camera, keys;
 
 // world
 function render() {
@@ -94,7 +94,7 @@ function run() {
   socket.on('entity_connected', function(entityData) {
     // get entity here
     var pos = {x:0, y:0, w: entityData.size, h: entityData.size};
-    entityMap[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type), entityData.layer);
+    entityMap[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type), entityData.layer, entityData.id);
     entityLayers[entityData.layer][entityData.id] = entityMap[entityData.id];
   });
 

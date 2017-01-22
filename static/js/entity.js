@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // entity
 
-function Entity(pos, anims, layer) {
+function Entity(pos, anims, layer, id) {
+  this.id = typeof id === 'undefined' ? null : id;
   this.pos = typeof pos === 'undefined' ? {x:0,y:0,w:50,h:50} : pos;
   this.layer = layer;
   this.anims = typeof anims === 'undefined' ? {} : anims;
