@@ -68,7 +68,7 @@ function returnDefaultEntities(type) {
       break;
     case 'FoodEntity': 
       return {
-        'idle': new AnimationColor( ['#00ff00','#00dd00','#00bb00'], {x:0,y:0,w:10,h:10}), 
+        'idle': new AnimationColor( ['#00ff00','#00dd00','#00bb00'], {x:0,y:0,w:2,h:2}), 
       }
       break;
     case 'WorldEntity':

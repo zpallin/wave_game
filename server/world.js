@@ -302,6 +302,7 @@ class World {
     if ((foodCount + this.existingFoodCount) > FOOD_RAND_MAX) {
       foodCount = FOOD_RAND_MAX - this.existingFoodCount;
     }
+    console.log("food count: " + foodCount + " / " + this.existingFoodCount);
     for (var i = 0; i < foodCount; i++, this.existingFoodCount++) {
       var food = new FoodEntity(this);
 
