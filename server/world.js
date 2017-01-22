@@ -16,6 +16,15 @@ const CAMERA_GRID_HEIGHT = 5;
 
 const TEMP_VIEW_RANGE = 10000;
 
+const WAVE_SPEED = 128;
+const WAVE_TIME = 5000;
+const WAVE_WARNING_TIME = 1000;
+
+const WAVE_STATE_IDLE = 0;
+const WAVE_STATE_FLOODING = 1;
+const WAVE_STATE_RECEEDING = 2;
+
+
 // Maps for keeping track of things
 let worldMap = {};
 let entityTracker = {};
@@ -24,6 +33,9 @@ class World {
   constructor(io) {
     this.id = generateUniqueId(worldMap);
     worldMap[this.id] = this;
+    this.lastTime = new Date().getTime();
+    this.waveTime = WAVE_TIME;
+    this.waveState = WAVE_STATE_IDLE;
 
     this.io = io;
     this.entityList = [];
@@ -62,8 +74,6 @@ class World {
       return false;
     }
 
-    this.notifyAllPlayers('entity_connected', entity.clientData());
-
     // If this entity has a socket connection, connect to our worlds channel.
     if (entity.io) {
       entity.io.join(this.id);
@@ -73,6 +83,8 @@ class World {
         entity.io.emit('entity_connected', other.clientData());
       });
     }
+
+    this.notifyAllPlayers('entity_connected', entity.clientData());
 
     this.entityList.push(entity);
     console.log(`Entity ${entity.id} joined world ${this.id}`);
@@ -223,7 +235,47 @@ class World {
   }
 
   update() {
-    // TODO: Update the game here!
+    // let time = new Date().getTime();
+    // let elapsed = time - this.lastTime;
+    // this.lastTime = time;
+
+    // switch (this.waveState) {
+    //   case WAVE_STATE_IDLE: {
+    //     this.waveTime -= elapsed;
+    //     if (this.waveTime <= 0) {
+    //       this.waveTime = WAVE_TIME;
+    //       this.isWaving;
+    //     } else if (this.waveTime <= WAVE_WARNING_TIME) {
+    //       let warningIntensity = 1.0 - (this.waveTime / WAVE_WARNING_TIME);
+    //       this.notifyAllPlayers('fog_warning', warningIntensity);
+    //     }
+
+    //     break;
+    //   }
+    // }
+
+    // if (this.isWaving) {
+    //   this.waterHeight += (elapsed / 1000) * WAVE_SPEED;
+    //   if (this.waterHeight > GRID_SIZE * WORLD_GRID_HEIGHT) {
+    //     this.waterHeight = GRID_SIZE * WORLD_GRID_HEIGHT;
+    //   }
+    // } else {
+    //   if (this.waterHeight > 0) {
+    //     this.waterHeight -= (elapsed / 1000) * WAVE_SPEED;
+    //     if (this.waterHeight <= 0) {
+    //       this.waterHeight = 0;
+    //     }
+    //   } else {
+    //     this.waveTime -= elapsed;
+    //     if (this.waveTime <= 0) {
+    //       this.waveTime = WAVE_TIME;
+    //       this.isWaving;
+    //     } else if (this.waveTime <= WAVE_WARNING_TIME) {
+    //       let warningIntensity = 1.0 - (this.waveTime / WAVE_WARNING_TIME);
+    //       this.notifyAllPlayers('fog_warning', warningIntensity);
+    //     }
+    //   }
+    // }
   }
 }
 
