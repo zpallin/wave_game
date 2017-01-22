@@ -1,91 +1,31 @@
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext('2d');
-var keys = new Keys();
-
-var coinImg = new Image();
-var colorTest = new RenderColor(ctx, 40, 40, ['#00ff00', '#00dd00', '#00bb00']);
-coinImg.src = '/img/coin.png';
-var animTest = new Animation(ctx, coinImg, 44, 44, 15, false);
+var player, camera, keys, world;
+var colorTest = new AnimationColor( ['#00ff00', '#00dd00', '#00bb00'], {x: 0, y: 0, w:50, h:50});
+var animTest = new Animation( coinImg, 44, 44, 15, false);
 
 // world
-var world = {
-  x: 0,
-  y: 0,
-	w: 1000,
-	h: 1000,
-  color: null, 
-  update: function() {
-    this.color.rectLoop();
-  }
-};
-world.color = new RenderColor(ctx, world.w, world.h, ['#0000ff', '#0000dd', '#0000bb']);
-
-var player = {
-  pos: {x: 0, y: 0, w: 100, h: 100},
-  speed: 4,
-	left: false,
-	down: false,
-	right: false,
-	up: false,
-  entity: null, 
-	update: function(dt) {
-    this.move();
-    this.entity.update(dt);
-	},
-  render: function() {
-    this.entity.render();
-  },
-  generate: function() {
-    var anims = {
-      'idle': new Animation(ctx, coinImg, 44, 44),
-      'left': new Animation(ctx, coinImg, 44, 44, 15, true, [0,1]),
-      'right': new Animation(ctx, coinImg, 44, 44, 15, true, [2,3]),
-      'up': new Animation(ctx, coinImg, 44, 44, 15, true, 'reverse'),
-    }
-    this.entity = new Entity(ctx, this.pos, anims);
-  },
-  reset: function() {
-    this.entity.reset();
-  },
-  move: function() {
-    var newState = undefined;
-    if (this.left) {
-      this.pos.x -= this.speed;
-      newState = 'left';
-    }
-    if (this.right) {
-      this.pos.x += this.speed;
-      newState = 'right';
-    }
-    if (this.down) {
-      this.pos.y += this.speed;
-    }
-    if (this.up) {
-      this.pos.y -= this.speed;
-      newState = 'up';
-    }
-    this.entity.setState(newState);
-  }
-};
-var camera = new Camera(ctx, canvas, player);
-
 function render(dt) {
 	ctx.save();
   ctx.clearRect(0,0,canvas.width,canvas.height);
   camera.focus();
 	camera.follow(dt);
-  world.update();
-  colorTest.rectLoop(0, 0); 
-	player.render();
+  world.render();
+  if (typeof player !== 'undefined') {
+  	player.render();
+  }
   ctx.restore();
 }
 
 function update(dt) {
-  player.update(dt);
-  helpers.clamp(player.pos,world);
+  if (typeof player !== 'undefined') {
+    player.update(dt);
+    helpers.clamp(player.pos,world.pos);
+  }
 }
 
 function reset() {
+  keys = new Keys();
+  world = new World(ctx);
+  camera = new Camera( canvas, world.entity);
 	keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
 	keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });
 	keys.register({ keys: [KEY.W], mode: 'down', action: function() { player.up    = true;  } });
@@ -95,7 +35,6 @@ function reset() {
 	keys.register({ keys: [KEY.W], mode: 'up',   action: function() { player.up    = false; } });
 	keys.register({ keys: [KEY.S], mode: 'up',   action: function() { player.down  = false; } });
 	keys.setListeners();
-  player.reset();
 }
 
 function run() {
@@ -103,7 +42,6 @@ function run() {
   var last = new Date().getTime();
   var dt = 0;
   var gdt = 0;
-  player.generate();
   reset();
 
   function frame() {
@@ -117,7 +55,49 @@ function run() {
     window.requestAnimationFrame(frame);
   }
 
-  frame();
+  // new entity connected
+  socket.on('entity_connected', function(entityData) {
+    // get entity here
+    var pos = {x:0, y:0, w: entityData.size, h: entityData.size};
+    entityList[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type));
+    console.log("ENTITY CONNECTED");
+    console.log(entityList);
+  });
+
+  // existing entity left the game.
+  socket.on('entity_disconnected', function(id) {
+    delete entityList[id];
+  });
+
+  // Your identifier
+  socket.on('set_identity', function(id) {
+    console.log(entityList[id]);
+    console.log('set identity id: ' + id);
+    var pos = {x:0, y:0, w: entityList[id].pos.w, h: entityList[id].pos.h};
+    player = new Player(entityList[id]);
+    camera.setEntity(player.entity);
+
+    // Now that we know who we are, let's start playing!
+    frame();
+  });
+
+  // now get the data
+  socket.on('entity_moved', function(entityData) {
+    var entity = entityList[entityData.id];
+    if (entity) {
+      entity.pos.x = entityData.pos.x;
+      entity.pos.y = entityData.pos.y;
+    }
+  });
+
+  // Entity is hidden from view.
+  socket.on('entity_hidden', function(id) {
+    var entity = entityList[id];
+    if (entity) {
+      entity.x = -10000;
+      entity.y = -10000;
+    }
+  });
 }
 
 run();
