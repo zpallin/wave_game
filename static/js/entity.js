@@ -4,8 +4,6 @@
 function Entity(ctx, pos, anims) {
   this.ctx = ctx;
   this.pos = pos;
-  this.scale
-  this.bounds = bounds;
   this.anims = typeof anims === 'undefined' ? {} : anims;
   this.state = 'idle';
   this.colorLoop = ["#005500", "#006600", "#007700", "#006600"];
