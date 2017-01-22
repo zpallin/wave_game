@@ -87,7 +87,7 @@ function Animation(img, fw, fh, fps, mirror, loop, seq) {
 	this.w = fw;
 	this.h = fh;
 
-  this.speed = 1
+  this.speed = 1;
   this.mirror = mirror;
   this.fullSeq = [];
 
@@ -119,7 +119,8 @@ Animation.prototype.update = function(dt) {
 	this.dt += dt;
 	// the index should be incrementing by no more than the integer value of
 	// dx multiplied by fps multiplied by this.w
-	if (this.dt > 1 / (this.fps * this.speed)) {
+  // also multiple by size, which is a ratio of current size to default size
+	if (this.dt > 1 / (this.fps * this.speed * this.size)) {
 		this.idx++;
 		this.dt = 0;
 	}

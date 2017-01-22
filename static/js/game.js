@@ -100,8 +100,16 @@ function run() {
     if (entity) {
       entity.pos.x = entityData.pos.x;
       entity.pos.y = entityData.pos.y;
+
+      if (entityData.size != entity.pos.w) {
+        for (var i = 0; i < entity.anims.length; i++) {
+          entity.anims[i].size = entityData.size / assumedEntitySize;
+        }
+      }
+
       entity.pos.w = entityData.size;
       entity.pos.h = entityData.size;
+      
       entity.visible = true;
     }
   });
