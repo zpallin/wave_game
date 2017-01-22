@@ -37,10 +37,10 @@ Player.prototype.attack = function(dt) {
     var animIdx = this.entity.anims['attackRight'].idx;
     if (animIdx > this.attackFrameStart) {
       socket.emit('player_damage', {
-          x: this.pos.x + this.pos.w / 4,
-          y: this.pos.y + this.pos.h / 4,
-          w: this.pos.w / 4,
-          h: this.pos.h,
+          x: this.pos.x + this.pos.w / 2,
+          y: this.pos.y + this.pos.h / 2,
+          w: this.pos.w / 2,
+          h: this.pos.h / 2,
           d: 1
       });
       this.hasDamaged = true;
@@ -51,10 +51,10 @@ Player.prototype.attack = function(dt) {
     
     if (animIdx > this.attackFrameStart) {
       socket.emit('player_damage', {
-        x: this.pos.x - this.pos.w / 4,
-        y: this.pos.y - this.pos.h / 4,
-        w: this.pos.w / 4,
-        h: this.pos.h,
+        x: this.pos.x - this.pos.w / 2,
+        y: this.pos.y - this.pos.h / 2,
+        w: this.pos.w / 2,
+        h: this.pos.h / 2,
         d: -1
       });
       this.hasDamaged = true;
