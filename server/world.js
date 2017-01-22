@@ -4,11 +4,11 @@ const generateUniqueId = require('./entity/entity_base').generateUniqueId;
 const FoodEntity = require('./entity/entity_food').FoodEntity;
 
 // This is the size of a single grid tile.
-const GRID_SIZE = 128;
+const GRID_SIZE = 100;
 
 // These keep track of how many grid tiles there are in the entire map.
-const WORLD_GRID_WIDTH = 100;
-const WORLD_GRID_HEIGHT = 20;
+const WORLD_GRID_WIDTH = 20;
+const WORLD_GRID_HEIGHT = 10;
 
 // These keep track of how large the players camera view is in relation to our grid size.
 const CAMERA_GRID_WIDTH = 5;
@@ -16,7 +16,7 @@ const CAMERA_GRID_HEIGHT = 5;
 
 const TEMP_VIEW_RANGE = 10000;
 
-const WAVE_SPEED = 128 * 5;
+const WAVE_SPEED = GRID_SIZE * WORLD_GRID_HEIGHT / 4;
 const WAVE_TIME = 5000;
 const WAVE_WARNING_TIME = 1000;
 

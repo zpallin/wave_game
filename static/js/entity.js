@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 // entity
 
-function Entity(pos, anims) {
+function Entity(pos, anims, layer) {
   this.pos = typeof pos === 'undefined' ? {x:0,y:0,w:50,h:50} : pos;
+  this.layer = layer;
   this.anims = typeof anims === 'undefined' ? {} : anims;
   this.state = 'idle';
+  this.visible = false;
 }
 
 Entity.prototype.setState = function(state) {
@@ -31,7 +33,7 @@ Entity.prototype.update = function(dt, x, y) {
 } 
 
 Entity.prototype.render = function(name) {
-  if (!(this.state in this.anims)) {
+  if (!this.visible || !(this.state in this.anims)) {
     return false;
   }
   
@@ -65,5 +67,9 @@ function returnDefaultEntities(type) {
         'idle': new AnimationColor( ['#00ff00','#00dd00','#00bb00'], {x:0,y:0,w:10,h:10}), 
       }
       break;
+    case 'WorldEntity':
+      return {
+        'idle': new Animation(sandImg, 512, 512)
+      }
   }
 }

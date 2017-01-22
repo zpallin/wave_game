@@ -1,25 +1,33 @@
 var player, camera, keys, world;
-var colorTest = new AnimationColor( ['#00ff00', '#00dd00', '#00bb00'], {x: 0, y: 0, w:50, h:50});
-var animTest = new Animation( coinImg, 44, 44, 15, false);
 
 // world
-function render(dt) {
+function render() {
 	ctx.save();
   ctx.clearRect(0,0,canvas.width,canvas.height);
   camera.focus();
-	camera.follow(dt);
   world.render();
-  if (typeof player !== 'undefined') {
-  	player.render();
+  for (var layer = 0; layer < entityLayers.length; ++layer) {
+    var map = entityLayers[layer];
+    for (var id in map) {
+      map[id].render();
+    }
   }
+  // TODO: Render Water layer
+  // TODO: Render Fog layer
   ctx.restore();
 }
 
 function update(dt) {
-  world.update();
+  camera.follow(dt);
+  world.update(dt);
+  for (var layer = 0; layer < entityLayers.length; ++layer) {
+    var map = entityLayers[layer];
+    for (var id in map) {
+      map[id].update(dt);
+    }
+  }
   if (typeof player !== 'undefined') {
-    player.update(dt);
-    helpers.clamp(player.pos,world.pos);
+    player.updateControls(dt, world.pos);
   }
 }
 
@@ -50,7 +58,7 @@ function run() {
     dt = Math.min(1, (now - last) / 1000);
 
     update(dt);
-    render(dt);
+    render();
     last = now;
     //window.setTimeout(frame, 1000 / 60);
     window.requestAnimationFrame(frame);
@@ -60,22 +68,23 @@ function run() {
   socket.on('entity_connected', function(entityData) {
     // get entity here
     var pos = {x:0, y:0, w: entityData.size, h: entityData.size};
-    entityList[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type));
-    //console.log("ENTITY CONNECTED");
-    //console.log(entityList);
+    entityMap[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type), entityData.layer);
+    entityLayers[entityData.layer][entityData.id] = entityMap[entityData.id];
   });
 
   // existing entity left the game.
   socket.on('entity_disconnected', function(id) {
-    delete entityList[id];
+    var entity = entityMap[id];
+    if (entity) {
+      delete entityLayers[entity.layer][id];
+    }
+    delete entityMap[id];
   });
 
   // Your identifier
   socket.on('set_identity', function(id) {
-    //console.log(entityList[id]);
-    //console.log('set identity id: ' + id);
-    var pos = {x:0, y:0, w: entityList[id].pos.w, h: entityList[id].pos.h};
-    player = new Player(entityList[id]);
+    var pos = {x:0, y:0, w: entityMap[id].pos.w, h: entityMap[id].pos.h};
+    player = new Player(entityMap[id]);
     camera.setEntity(player.entity);
 
     // Now that we know who we are, let's start playing!
@@ -84,20 +93,19 @@ function run() {
 
   // now get the data
   socket.on('entity_moved', function(entityData) {
-    var entity = entityList[entityData.id];
+    var entity = entityMap[entityData.id];
     if (entity) {
-//      helpers.clamp(entity.pos,world.pos);
       entity.pos.x = entityData.pos.x;
       entity.pos.y = entityData.pos.y;
+      entity.visible = true;
     }
   });
 
   // Entity is hidden from view.
   socket.on('entity_hidden', function(id) {
-    var entity = entityList[id];
+    var entity = entityMap[id];
     if (entity) {
-      entity.pos.x = 0;
-      entity.pos.y = 0;
+      entity.visible = false;
     }
   });
 }

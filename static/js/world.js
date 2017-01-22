@@ -6,6 +6,7 @@ function World(pos) {
   this.entity = new Entity(this.pos, {
     'idle': new AnimationColor( ['#0000ff', '#0000dd', '#0000bb'], this.pos),
   });
+  this.visible = true;
 }
 
 World.prototype.update = function(dt) {

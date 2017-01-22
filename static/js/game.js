@@ -1,134 +1,49 @@
+var player, camera, keys, world;
 
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext('2d');
-var entityList = {};
-var socket = io.connect("/");
-
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-
-var player = null;
-
-var CONTROL = {
-  left: false,
-  right: false,
-  up: false,
-  down: false,
-};
-
-var KEY = {
-  A: 65,
-  D: 68,
-  S: 83,
-  W: 87,
-};
-
-var KEYS = [
-    { keys: [KEY.A], mode: 'down', action: function() { CONTROL.left  = true;  } },
-    { keys: [KEY.D], mode: 'down', action: function() { CONTROL.right = true;  } },
-    { keys: [KEY.W], mode: 'down', action: function() { CONTROL.up    = true;  } },
-    { keys: [KEY.S], mode: 'down', action: function() { CONTROL.down  = true;  } },
-    { keys: [KEY.A], mode: 'up',   action: function() { CONTROL.left  = false; } },
-    { keys: [KEY.D], mode: 'up',   action: function() { CONTROL.right = false; } },
-    { keys: [KEY.W], mode: 'up',   action: function() { CONTROL.up    = false; } },
-    { keys: [KEY.S], mode: 'up',   action: function() { CONTROL.down  = false; } },
-];
-
-////////////////////////////////////////////////////////////////////////////////
-
-function PLAYER(id, color, pos) {
-  // config
-	this.id = id;
-  this.x = pos.x;
-  this.y = pos.y;
-  this.color = color;
-
-  // static values
-  this.w = 40;
-  this.h = 40;
-}
-PLAYER.prototype.draw = function() {
-	drawPlayer(this.x, this.y, this.w, this.h, this.color);
-}
-PLAYER.prototype.goto = function(x,y) {
-  this.x = x;
-  this.y = y;
-}
-PLAYER.prototype.move = function(x,y) {
-  this.x += typeof x === 'undefined' ? 0 : x;
-  this.y += typeof y === 'undefined' ? 0 : y;
-}
-
-function drawPlayer(x,y,w,h,c) {
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.fillStyle = c;
-  ctx.fill();
-  ctx.closePath();  
-}
-
-function renderBackground() {
-  ctx.beginPath();
-  ctx.rect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.closePath();
-}
-
-function renderPlayers() {
-  for (var p in entityList) {
-    entityList[p].draw();
-  }
-}
-
-function renderPlayer() {
-  player.draw();
-}
-
+// world
 function render() {
-  renderBackground();
-  renderPlayer();
-  renderPlayers();
-}
-
-function setKeyListener(keys) {
-  var onkey = function(keyCode, mode) {
-    var n, k;
-    for(n = 0 ; n < keys.length ; n++) {
-      k = keys[n];
-      k.mode = k.mode || 'up';
-      if ((k.key == keyCode) || (k.keys && (k.keys.indexOf(keyCode) >= 0))) {
-        if (k.mode == mode) {
-          k.action.call();
-        }
-      }
+  ctx.save();
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  camera.focus();
+  world.render();
+  for (var layer = 0; layer < entityLayers.length; ++layer) {
+    var map = entityLayers[layer];
+    for (var id in map) {
+      map[id].render();
     }
-  };
-
-  document.addEventListener('keydown', function(ev) { onkey(ev.keyCode, 'down'); }, false);
-  document.addEventListener('keyup', function(ev) { onkey(ev.keyCode, 'up'); }, false);
+  }
+  // TODO: Render Water layer
+  // TODO: Render Fog layer
+  ctx.restore();
 }
 
-function update() {
-  var x = 0;
-  var y = 0;  
+function update(dt) {
+  camera.follow(dt);
+  world.update(dt);
+  for (var layer = 0; layer < entityLayers.length; ++layer) {
+    var map = entityLayers[layer];
+    for (var id in map) {
+      map[id].update(dt);
+    }
+  }
+  if (typeof player !== 'undefined') {
+    player.updateControls(dt, world.pos);
+  }
+}
 
-  if (CONTROL.up) {
-    y -= 1;
-  }
-  if (CONTROL.down) {
-    y += 1;
-  }
-  if (CONTROL.left) {
-    x -= 1;
-  }
-  if (CONTROL.right) {
-    x += 1;
-  }
-  
-  player.move(x,y);
-	socket.emit('player_move', {x: player.x, y: player.y});
+function reset() {
+  keys = new Keys();
+  world = new World();
+  camera = new Camera(world.entity);
+  keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
+  keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });
+  keys.register({ keys: [KEY.W], mode: 'down', action: function() { player.up    = true;  } });
+  keys.register({ keys: [KEY.S], mode: 'down', action: function() { player.down  = true;  } });
+  keys.register({ keys: [KEY.A], mode: 'up',   action: function() { player.left  = false; } });
+  keys.register({ keys: [KEY.D], mode: 'up',   action: function() { player.right = false; } });
+  keys.register({ keys: [KEY.W], mode: 'up',   action: function() { player.up    = false; } });
+  keys.register({ keys: [KEY.S], mode: 'up',   action: function() { player.down  = false; } });
+  keys.setListeners();
 }
 
 function run() {
@@ -136,33 +51,41 @@ function run() {
   var last = new Date().getTime();
   var dt = 0;
   var gdt = 0;
+  reset();
 
-	setKeyListener(KEYS);
   function frame() {
     now = new Date().getTime();
     dt = Math.min(1, (now - last) / 1000);
-    gdt = gdt + dt;
 
-    update();
+    update(dt);
     render();
     last = now;
-    window.setTimeout(frame, 1000 / 60);
+    //window.setTimeout(frame, 1000 / 60);
+    window.requestAnimationFrame(frame);
   }
 
   // new entity connected
   socket.on('entity_connected', function(entityData) {
-    entity = new PLAYER(entityData.id, entityData.color, {x: -10000, y: -10000});
-    entityList[entityData.id] = entity;
+    // get entity here
+    var pos = {x:0, y:0, w: entityData.size, h: entityData.size};
+    entityMap[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type), entityData.layer);
+    entityLayers[entityData.layer][entityData.id] = entityMap[entityData.id];
   });
 
   // existing entity left the game.
   socket.on('entity_disconnected', function(id) {
-    delete entityList[id];
+    var entity = entityMap[id];
+    if (entity) {
+      delete entityLayers[entity.layer][id];
+    }
+    delete entityMap[id];
   });
 
   // Your identifier
   socket.on('set_identity', function(id) {
-    player = entityList[id];
+    var pos = {x:0, y:0, w: entityMap[id].pos.w, h: entityMap[id].pos.h};
+    player = new Player(entityMap[id]);
+    camera.setEntity(player.entity);
 
     // Now that we know who we are, let's start playing!
     frame();
@@ -170,19 +93,19 @@ function run() {
 
   // now get the data
   socket.on('entity_moved', function(entityData) {
-    var entity = entityList[entityData.id];
+    var entity = entityMap[entityData.id];
     if (entity) {
-      entity.x = entityData.pos.x;
-      entity.y = entityData.pos.y;
+      entity.pos.x = entityData.pos.x;
+      entity.pos.y = entityData.pos.y;
+      entity.visible = true;
     }
   });
 
   // Entity is hidden from view.
   socket.on('entity_hidden', function(id) {
-    var entity = entityList[id];
+    var entity = entityMap[id];
     if (entity) {
-      entity.x = -10000;
-      entity.y = -10000;
+      entity.visible = false;
     }
   });
 }

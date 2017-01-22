@@ -1,19 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // player object
 
-function getHermitEntity(ctx, pos) {
-  var animations = {
-    'idle': new Animation(ctx, coinImg, 44, 44),
-    'left': new Animation(ctx, coinImg, 44, 44, 15, true, [0,1]),
-    'right': new Animation(ctx, coinImg, 44, 44, 15, true, [2,3]),
-    'up': new Animation(ctx, coinImg, 44, 44, 15, true, 'reverse'),
-    'down': new Animation(ctx, coinImg, 44, 44, 15, true, 'reverse'),
-    'burrow': new Animation(ctx, coinImg, 44, 44, 15, true, [4]),
-  };
-
-  return new Entity(ctx, pos, animations);
-}
-
 function Player(entity, speed) {
   this.pos = entity.pos;
   this.speed = typeof speed === 'undefined' ? 10 : speed;
@@ -26,9 +13,8 @@ function Player(entity, speed) {
   this.entity = entity;
 }
 
-Player.prototype.update = function(dt) {
-  this.move();
-  this.entity.update(dt);
+Player.prototype.updateControls = function(dt, bounds) {
+  this.move(bounds);
 }
 
 Player.prototype.render = function() {
@@ -39,7 +25,7 @@ Player.prototype.reset = function() {
   this.entity.reset();
 }
 
-Player.prototype.move = function() {
+Player.prototype.move = function(bounds) {
 	var newState = this.entity.state;
 
 	if (newState != 'burrow') {
@@ -64,6 +50,9 @@ Player.prototype.move = function() {
 			newState = 'burrow';
 		}
 	}
+
+  helpers.clamp(this.pos, bounds);
+
   //console.log(this.pos);
 	this.entity.setState(newState);
   socket.emit('player_move', {x: this.pos.x, y: this.pos.y});

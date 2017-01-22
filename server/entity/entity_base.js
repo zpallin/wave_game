@@ -14,6 +14,10 @@ const COLORS = [
 ];
 
 let entityMap = {};
+let layerType = {
+  LAYER_FOOD: 0,
+  LAYER_HERMIT: 1
+};
 
 function generateUniqueId(map) {
   let id = '';
@@ -31,11 +35,13 @@ function generateUniqueId(map) {
 
 // Base class for all entities.
 class EntityBase {
-  constructor(world, io = null) {
+  constructor(world, layer, io = null) {
+    this.layer = layer;
+
     this.id = generateUniqueId(entityMap);
     this.io = io; // sockets
     this.pos = {x: 0, y: 0};
-    this.size = 30; // Pixel size of entity
+    this.size = 60; // Pixel size of entity
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
     this.world = world; // The world instance this entity is in
     this.world.addEntity(this);
@@ -62,6 +68,7 @@ class EntityBase {
       type:    this.constructor.name,
       variant: 0,
       size:    this.size,
+      layer:   this.layer,
       color:   this.color
     };
   }
@@ -81,5 +88,6 @@ class EntityBase {
 module.exports = {
   EntityBase: EntityBase,
   entityMap: entityMap,
-  generateUniqueId: generateUniqueId
+  generateUniqueId: generateUniqueId,
+  layerType: layerType
 };
