@@ -176,6 +176,15 @@ function run() {
       entity.y = entityData.pos.y;
     }
   });
+
+  // Entity is hidden from view.
+  socket.on('entity_hidden', function(id) {
+    var entity = entityList[id];
+    if (entity) {
+      entity.x = -10000;
+      entity.y = -10000;
+    }
+  });
 }
 
 run();
