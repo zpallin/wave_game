@@ -5,23 +5,22 @@ function Camera(ctx, canvas, entity) {
   this.ctx = ctx;
   this.canvas = canvas;
   this.entity = entity;
-  this.x = 0;
-  this.y = 0;
+  this.pos = this.entity.pos;
   this.w = this.canvas.width;
   this.h = this.canvas.height;
   this.lerp = 8;
 }
 Camera.prototype.focus = function() {
   this.ctx.translate(
-    -this.x + this.w / 2,
-    -this.y + this.h / 2
+    -this.pos.x + this.w / 2,
+    -this.pos.y + this.h / 2
   );
 }
 Camera.prototype.follow = function(dt) {
   dt = typeof dt === 'undefined' ? 0 : dt;
   // transform camera x, y toward entity x, y
-  this.x += (this.entity.x - this.x) * this.lerp * dt;
-  this.y += (this.entity.y - this.y) * this.lerp * dt;
+  this.x += (this.entity.x - this.pos.x) * this.lerp * dt;
+  this.y += (this.entity.y - this.pos.y) * this.lerp * dt;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,38 +73,61 @@ RenderColor.prototype.rectLoop = function(x, y) {
   }
 }
 
-function RenderAnim(ctx, w, h, img, tpf, a) {
-  this.ctx = ctx;
-  this.w = w;
-  this.h = h;
+////////////////////////////////////////////////////////////////////////////////
+// animation object
 
-  // iterator
-  this.tc = 0;
-  this.iter = 0;
+function Animation(ctx, img, fw, fh, fps, loop, seq) {
+	this.ctx = ctx;
+	this.img = img;
+	this.seq = [];
+	this.w = fw;
+	this.h = fh;
 
-  // tpf
-  this.tpf = 15;
-  if (typeof tpf !== 'undefined') {
-    this.tpf = tpf;
+  this.fullSeq = [];
+
+  for (var i = 0; i < this.img.width; i+=fw) {
+    this.fullSeq.push(i);
   }
 
-  this.img = img;
+  if (seq === 'reverse') {
+    this.seq = this.fullSeq.reverse();
 
-  this.numFrames = this.img.width / this.w;
+  } else if (typeof seq === 'undefined' || seq.length === 0) {
+    this.seq = this.fullSeq;
+
+	} else {
+    for (var i = 0; i < seq.length; i++) {
+      this.seq.push(this.fullSeq[seq[i]]);
+    }
+  }
+
+	this.fps = typeof fps === 'undefined' ? 15 : fps;
+	this.loop = typeof loop === 'undefined' ? true : loop;
 }
-// animate an image
-RenderAnim.prototype.anim = function(x, y) {
-  
-  this.iter = this.iter % this.img.width;
+Animation.prototype.reset = function() {
+	this.dt = 0;
+	this.idx = 0;
+}
+Animation.prototype.update = function(dt) {
+	this.dt += dt;
 
-  ctx.beginPath();
-  ctx.drawImage(this.img, this.iter, 0, this.w, this.h, x, y, this.w, this.h);
-  ctx.closePath();
-  this.tc++;
+	// the index should be incrementing by no more than the integer value of
+	// dx multiplied by fps multiplied by this.w
+	if (this.dt > 1 / this.fps) {
+		this.idx++;
+		this.dt = 0;
+	}
 
-  // iterate colors if tick count passes ticks per frame
-  if (this.tc >= this.tpf) {
-    this.tc = 0;
-    this.iter = (this.iter + this.w) % this.img.width;
-  }
+	// if it's a loop, modulo the idx
+	if (this.loop) {
+		this.idx = this.idx % this.seq.length;
+	// if it's not, figure out if the animation should return false
+  	}	else if (this.idx > this.seq.length) {
+		return false;
+	}
+	return true;
+}
+
+Animation.prototype.draw = function() {
+  this.ctx.drawImage(this.img, this.seq[this.idx], 0, this.w, this.h, 0, 0, this.w, this.h);
 }
