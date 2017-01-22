@@ -62,16 +62,18 @@ class World {
       return false;
     }
 
+    this.notifyAllPlayers('entity_connected', entity.clientData());
+
     // If this entity has a socket connection, connect to our worlds channel.
     if (entity.io) {
       entity.io.join(this.id);
-      this.notifyAllPlayers('entity_connected', entity.clientData());
 
       // Now notify the newly added player of all the other entities in the world.
       this.entityList.forEach((other)=> {
         entity.io.emit('entity_connected', other.clientData());
       });
     }
+
     this.entityList.push(entity);
     console.log(`Entity ${entity.id} joined world ${this.id}`);
 
