@@ -1,4 +1,4 @@
-var player, camera, keys, world;
+var player, camera, keys, world, fog;
 
 // world
 function render() {
@@ -12,6 +12,7 @@ function render() {
       map[id].render();
     }
   }
+  fog.render();
   // TODO: Render Water layer
   // TODO: Render Fog layer
   ctx.restore();
@@ -19,7 +20,6 @@ function render() {
 
 function update(dt) {
   camera.follow(dt);
-  world.update(dt);
   for (var layer = 0; layer < entityLayers.length; ++layer) {
     var map = entityLayers[layer];
     for (var id in map) {
@@ -34,7 +34,8 @@ function update(dt) {
 function reset() {
   keys = new Keys();
   world = new World();
-  camera = new Camera(world.entity);
+  fog = new Fog();
+  camera = new Camera(world);
   keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
   keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });
   keys.register({ keys: [KEY.W], mode: 'down', action: function() { player.up    = true;  } });
@@ -109,6 +110,10 @@ function run() {
     if (entity) {
       entity.visible = false;
     }
+  });
+
+  socket.on('fog_intensity', function(alpha) {
+    fog.setAlpha(alpha);
   });
 }
 
