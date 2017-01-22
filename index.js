@@ -11,6 +11,7 @@ const io = require('socket.io').listen(server);
 const PlayerEntity = require('./server/entity/entity_player').PlayerEntity;
 let entityMap = require('./server/entity/entity_base').entityMap;
 const World = require('./server/world').World;
+const worldSize = require('./server/world').worldSize;
 
 let worldList = [];
 
@@ -27,7 +28,7 @@ worldList.push(new World(io));
 // server
 
 app.get('/', function(req, res) {
-  res.render('index', { title: 'Wave IO', message: 'hello'});
+  res.render('index', { title: 'Hermit Carnage', worldSize: worldSize});
 });
 
 app.get('/client_test', function(req, res) {

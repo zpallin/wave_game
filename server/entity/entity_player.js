@@ -9,6 +9,7 @@ class PlayerEntity extends EntityBase {
 
     this.isBurrowed = false;
     this.breath = 100;
+    this.score = 0;
 
     this.io.emit('set_identity', this.id);
 
@@ -18,6 +19,12 @@ class PlayerEntity extends EntityBase {
 
   update(elapsed) {
     super.update(elapsed);
+  }
+
+  addScore(amount) {
+    this.score += amount;
+
+    this.setSize(Math.min(this.size + amount, 180));
   }
 }
 

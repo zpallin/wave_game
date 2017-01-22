@@ -25,7 +25,7 @@ const WAVE_STATE_FLOODING = 1;
 const WAVE_STATE_RECEEDING = 2;
 
 // food amounts
-const FOOD_RAND_MAX = Math.floor(WORLD_GRID_WIDTH * GRID_SIZE / 100);
+const FOOD_RAND_MAX = Math.floor(WORLD_GRID_WIDTH * GRID_SIZE / 10);
 const FOOD_RAND_MIN = Math.floor(FOOD_RAND_MAX / 2);
 
 // Maps for keeping track of things
@@ -187,7 +187,7 @@ class World {
           id: notifyEntity.id,
           pos: notifyEntity.pos,
           size: notifyEntity.size
-        })
+        });
       }
     });
 
@@ -195,16 +195,20 @@ class World {
     if (entity.constructor.name === 'PlayerEntity') {
       let touchedEntityList = this.getEntitiesInRange(
         entity.pos, 0, entity.size/2, true, entity.id);
+      let addScore = 0;
       touchedEntityList.forEach((touched)=> {
         switch (touched.constructor.name) {
           // Pick up food and grow bigger.
           case 'FoodEntity': {
             touched.destroy();
-            entity.setSize(entity.size + 5);
+            addScore += 0.1;
             break;
           }
         }
       });
+      if (addScore > 0) {
+        entity.addScore(addScore);
+      }
     }
   }
 
@@ -353,5 +357,9 @@ class World {
 }
 
 module.exports = {
-  World: World
+  World: World,
+  worldSize: {
+    x: WORLD_GRID_WIDTH * GRID_SIZE,
+    y: WORLD_GRID_HEIGHT * GRID_SIZE
+  }
 };

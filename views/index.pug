@@ -6,8 +6,15 @@ html(lang="en")
   body
     div#container
       h1=title
-      div=message
       canvas#myCanvas(width=600,height=500)
+    div(style='display:none;')
+      img(src='/img/sand.jpg')
+      img(src='/img/water.jpg')
+      img(src='/img/hermit_idle_down.png')
+      img(src='/img/hermit_idle_right.png')
+      img(src='/img/hermit_walk_right.png')
+    script#worldWidth=worldSize.x
+    script#worldHeight=worldSize.y
     script(src='/socket.io/socket.io.js')
     script(src='/js/globals.js')
     script(src='/js/helpers.js')
