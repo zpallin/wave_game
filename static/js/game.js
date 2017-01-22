@@ -39,10 +39,12 @@ function reset() {
   keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });
   keys.register({ keys: [KEY.W], mode: 'down', action: function() { player.up    = true;  } });
   keys.register({ keys: [KEY.S], mode: 'down', action: function() { player.down  = true;  } });
+  keys.register({ keys: [KEY.SPACE], mode: 'down', action: function() { player.burrow = true;  } });
   keys.register({ keys: [KEY.A], mode: 'up',   action: function() { player.left  = false; } });
   keys.register({ keys: [KEY.D], mode: 'up',   action: function() { player.right = false; } });
   keys.register({ keys: [KEY.W], mode: 'up',   action: function() { player.up    = false; } });
   keys.register({ keys: [KEY.S], mode: 'up',   action: function() { player.down  = false; } });
+  keys.register({ keys: [KEY.SPACE], mode: 'up',   action: function() { player.burrow = false; } });
   keys.setListeners();
 }
 
