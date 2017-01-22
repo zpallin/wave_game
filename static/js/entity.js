@@ -54,12 +54,12 @@ function returnDefaultEntities(type) {
   switch(type) {
     case 'PlayerEntity': 
       return {
-        'idle': new Animation( coinImg, 44, 44),
-        'left': new Animation( coinImg, 44, 44, 15, true, [0,1]),
-        'right': new Animation( coinImg, 44, 44, 15, true, [2,3]),
-        'up': new Animation( coinImg, 44, 44, 15, true, 'reverse'),
-        'down': new Animation( coinImg, 44, 44, 15, true, 'reverse'),
-        'burrow': new Animation( coinImg, 44, 44, 5, false, [4,4,4,4,4,4,4]),
+        'idle': new Animation( hermitIdleDown, 500, 333, 5),
+        'left': new Animation( hermitWalkRight, 500, 333, 15, true),
+        'right': new Animation( hermitWalkRight, 500, 333, 15, false),
+        'up': new Animation( hermitIdleDown, 500, 333),
+        'down': new Animation( hermitIdleDown, 500, 333, 15, true),
+        'burrow': new Animation( hermitIdleDown, 500, 333, 5, false, false, [1,1,1,1,1,1,1]),
       };
       break;
     case 'FoodEntity': 
