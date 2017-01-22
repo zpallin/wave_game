@@ -3,10 +3,11 @@
 
 // key static obj
 var KEY = {
-    A: 65,
-    D: 68,
-    S: 83,
-    W: 87,
+  A: 65,
+  D: 68,
+  S: 83,
+  W: 87,
+  SPACE: 32,
 };
 
 // keys manager

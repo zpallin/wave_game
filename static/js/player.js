@@ -26,9 +26,10 @@ Player.prototype.reset = function() {
 }
 
 Player.prototype.move = function(bounds) {
-	var newState = 'idle';
+  var newState = this.entity.state;
 
-	if (this.entity.state != 'burrow') {
+	if (newState != 'burrow') {
+	  newState = 'idle';
 
 		if (this.left) {
 			this.pos.x -= this.speed;

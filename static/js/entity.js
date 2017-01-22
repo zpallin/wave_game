@@ -59,7 +59,7 @@ function returnDefaultEntities(type) {
         'right': new Animation( coinImg, 44, 44, 15, true, [2,3]),
         'up': new Animation( coinImg, 44, 44, 15, true, 'reverse'),
         'down': new Animation( coinImg, 44, 44, 15, true, 'reverse'),
-        'burrow': new Animation( coinImg, 44, 44, 15, true, [4]),
+        'burrow': new Animation( coinImg, 44, 44, 5, false, [4,4,4,4,4,4,4]),
       };
       break;
     case 'FoodEntity': 

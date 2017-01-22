@@ -113,7 +113,8 @@ Animation.prototype.reset = function() {
 }
 Animation.prototype.update = function(dt) {
 	this.dt += dt;
-
+  if (!this.loop)
+    console.log(this.idx);
 	// the index should be incrementing by no more than the integer value of
 	// dx multiplied by fps multiplied by this.w
 	if (this.dt > 1 / this.fps) {
@@ -124,8 +125,11 @@ Animation.prototype.update = function(dt) {
 	// if it's a loop, modulo the idx
 	if (this.loop) {
 		this.idx = this.idx % this.seq.length;
-	// if it's not, figure out if the animation should return false
+	
+  // if it's not, figure out if the animation should return false
   }	else if (this.idx > this.seq.length) {
+    console.log(this.idx);
+    this.reset();
 		return false;
 	}
 	return true;
