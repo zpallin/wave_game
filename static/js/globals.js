@@ -48,8 +48,8 @@ hermitWalkUp.src = '/img/hermit_walk_up.png';
 var hermitBurrow = new Image();
 hermitBurrow.src = '/img/hermit_burrow_front.png';
 
-var hermitBurrow = new Image();
-hermitBurrow.src = '/img/hermit_burrow_front.png';
+var hermitDeath = new Image();
+hermitDeath.src = '/img/hermit_death.png';
 
 var hermitSurprise = new Image();
 hermitSurprise.src = '/img/hermit_surprise.png';
