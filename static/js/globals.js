@@ -11,9 +11,6 @@ var socket = io.connect('/');
 var sandImg = new Image();
 sandImg.src = '/img/sand.jpg';
 
-var coinImg = new Image();
-coinImg.src = '/img/coin.png';
-
 var hermitIdleDown = new Image();
 hermitIdleDown.src = '/img/hermit_idle_down.png';
 
