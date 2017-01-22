@@ -30,6 +30,10 @@ app.get('/', function(req, res) {
   res.render('index', { title: 'Wave IO', message: 'hello'});
 });
 
+app.get('/client_test', function(req, res) {
+  res.render('client_test', { title: 'Wave IO', message: 'hello'});
+});
+
 server.listen(config.port, function() {
   console.log("Listening on "+ config.port);
 });
