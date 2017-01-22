@@ -1,4 +1,4 @@
-var player, camera, keys, world, fog;
+var player, camera, keys, world, water, fog;
 
 // world
 function render() {
@@ -12,9 +12,8 @@ function render() {
       map[id].render();
     }
   }
+  water.render();
   fog.render();
-  // TODO: Render Water layer
-  // TODO: Render Fog layer
   ctx.restore();
 }
 
@@ -34,6 +33,7 @@ function update(dt) {
 function reset() {
   keys = new Keys();
   world = new World();
+  water = new Water();
   fog = new Fog();
   camera = new Camera(world);
   keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
@@ -114,6 +114,10 @@ function run() {
 
   socket.on('fog_intensity', function(alpha) {
     fog.setAlpha(alpha);
+  });
+
+  socket.on('water_height', function(height) {
+    water.setHeight(height);
   });
 }
 
