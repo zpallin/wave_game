@@ -13,6 +13,10 @@ function Player(entity, speed) {
   this.entity = entity;
 }
 
+Player.prototype.modSpeed = function() {
+  return (6 / this.pos.w) * this.speed * 10;
+}
+
 Player.prototype.updateControls = function(dt, bounds) {
   this.move(bounds);
 }
@@ -37,19 +41,19 @@ Player.prototype.move = function(bounds) {
 	  newState = 'idle';
 
 		if (this.left) {
-			this.pos.x -= this.speed;
+			this.pos.x -= this.modSpeed();
 			newState = 'left';
 		}
 		if (this.right) {
-			this.pos.x += this.speed;
+			this.pos.x += this.modSpeed();
 			newState = 'right';
 		}
 		if (this.down) {
-			this.pos.y += this.speed;
+			this.pos.y += this.modSpeed();
 			newState = 'down';
 		}
 		if (this.up) {
-			this.pos.y -= this.speed;
+			this.pos.y -= this.modSpeed();
 			newState = 'up';
 		}
     if (this.right && this.up) {
