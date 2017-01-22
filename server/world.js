@@ -14,7 +14,7 @@ const WORLD_GRID_HEIGHT = 5;
 const CAMERA_GRID_WIDTH = 5;
 const CAMERA_GRID_HEIGHT = 5;
 
-const VIEW_DISTANCE = 300;
+const TEMP_VIEW_RANGE = 10000;
 
 const WAVE_SPEED = GRID_SIZE * WORLD_GRID_HEIGHT / 2;
 const WAVE_TIME = 5000;
@@ -143,32 +143,23 @@ class World {
       gridSpace.entityList.push(entity);
 
       let removedEntityList = this.getEntitiesInRange(
-        entity.pos, VIEW_DISTANCE, VIEW_DISTANCE + GRID_SIZE, false, entity.id);
+        entity.pos, TEMP_VIEW_RANGE, TEMP_VIEW_RANGE + GRID_SIZE, false, entity.id);
 
       removedEntityList.forEach((removedEntity)=> {
         if (removedEntity.io) {
           removedEntity.io.emit('entity_hidden', entity.id);
         }
-        if (entity.io) {
-          entity.io.emit('entity_hidden', removedEntity.id);
-        }
       });
     }
 
     let notifyEntityList = this.getEntitiesInRange(
-      entity.pos, 0, VIEW_DISTANCE, false);
+      entity.pos, 0, TEMP_VIEW_RANGE, false);
 
     notifyEntityList.forEach((notifyEntity)=> {
       if (notifyEntity.io) {
         notifyEntity.io.emit('entity_moved', {
           id: entity.id,
           pos: entity.pos
-        });
-      }
-      if (entity.io) {
-        entity.io.emit('entity_moved', {
-          id: notifyEntity.id,
-          pos: notifyEntity.pos
         });
       }
     });
@@ -202,8 +193,8 @@ class World {
             // The first test is checking within a square on the x and y distance.
             let w = Math.abs(entity.pos.x - pos.x);
             let h = Math.abs(entity.pos.y - pos.y);
-            if (w - (entity.size/2) > maxRange || h - (entity.size/2) > maxRange ||
-               (w + (entity.size/2) < minRange && h + (entity.size/2) < minRange)) {
+            if (w - (entity.size/2) > maxRange || w + (entity.size/2) < minRange ||
+                h - (entity.size/2) > maxRange || h + (entity.size/2) < minRange) {
               return;
             }
 
@@ -307,7 +298,7 @@ class World {
       var x = Math.floor(Math.random() * (WORLD_GRID_WIDTH * GRID_SIZE));
 
       // y is harder
-      var gridHeight = Math.floor(WORLD_GRID_HEIGHT * GRID_SIZE):
+      var gridHeight = Math.floor(WORLD_GRID_HEIGHT * GRID_SIZE);
       var bottomRange = Math.floor(Math.random() * (gridHeight / 3));
       var midRange = Math.floor(Math.random() * (gridHeight / 5));
       var y = gridHeight - bottomRange - midRange;
