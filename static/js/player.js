@@ -16,20 +16,20 @@ function getHermitEntity(ctx, pos) {
 
 function Player(entity, speed) {
   this.pos = entity.pos;
-  this.speed = typeof speed !== 'undefined' ? 10 : speed;
+  this.speed = typeof speed === 'undefined' ? 10 : speed;
   
   this.left = false;
   this.down = false;
   this.right = false;
   this.up = false;
 	this.burrow = false;
-
   this.entity = entity;
 }
 
 Player.prototype.update = function(dt) {
   this.move();
   this.entity.update(dt);
+  console.log(this.pos);
 }
 
 Player.prototype.render = function() {

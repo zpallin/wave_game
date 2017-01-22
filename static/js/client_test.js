@@ -24,7 +24,7 @@ function update(dt) {
 
 function reset() {
   keys = new Keys();
-  world = new World(ctx);
+  world = new World();
   camera = new Camera( canvas, world.entity);
 	keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
 	keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });
