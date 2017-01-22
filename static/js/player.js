@@ -13,7 +13,7 @@ function Player(entity, speed) {
   this.entity = entity;
   this.attackFrameStart = 2;
   this.resetAttack();
-  this.runThrough = ['burrow', 'attackRight', 'attackLeft'];
+  this.runThrough = ['burrow', 'attackRight', 'attackLeft','knockBackLeft','knockBackRight'];
   this.hasDamaged = false;
 }
 
@@ -36,10 +36,11 @@ Player.prototype.attack = function(dt) {
     var animIdx = this.entity.anims['attackRight'].idx;
     if (animIdx > this.attackFrameStart) {
       socket.emit('player_damage', {
-          x: this.pos.x + this.pos.w / 2,
-          y: this.pos.y + this.pos.h / 2,
+          x: this.pos.x + this.pos.w / 4,
+          y: this.pos.y + this.pos.h / 4,
           w: this.pos.w / 12,
-          h: this.pos.h
+          h: this.pos.h,
+          d: 1
       });
       this.hasDamaged = true;
     }
@@ -49,10 +50,11 @@ Player.prototype.attack = function(dt) {
     
     if (animIdx > this.attackFrameStart) {
       socket.emit('player_damage', {
-        x: this.pos.x - this.pos.w / 2,
-        y: this.pos.y - this.pos.h / 2,
-        w: this.pos.w / 12,
-        h: this.pos.h
+        x: this.pos.x - this.pos.w / 4,
+        y: this.pos.y - this.pos.h / 4,
+        w: this.pos.w,
+        h: this.pos.h,
+        d: -1
       });
       this.hasDamaged = true;
     }
@@ -132,12 +134,22 @@ Player.prototype.move = function(bounds) {
       this.hasDamaged = false;
     }
 	}
+  console.log(newState);
+/*
+  if (newState === 'knockBackLeft') {
+    console.log('knock left');
+    this.pos.x -= this.modSpeed() / 4;
+  }
+  if (newState === 'knockBackRight') {
+    console.log('knock right');
+    this.pos.x += this.modSpeed() / 4;
+  }
 
   socket.on('attack_zone_alert', function(data) {
     console.log('attack zone!');
     console.log(data);
   });
-
+*/
   helpers.clamp(this.pos, bounds);
 
   //console.log(this.pos);
