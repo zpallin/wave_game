@@ -154,7 +154,17 @@ function run() {
     water.setHeight(height);
   });
 
+  socket.on('entity_state', function(data) {
+    var entity = entityMap[data.id];
+    if (entity) {
+      entity.setState(data.state);
+    }
+  });
 
+  socket.on('play_particle', function(data) {
+    // TODO: data.type is the type of particle to play.
+    // TODO: data.pos is the position.
+  });
 }
 
 if (document.addEventListener) {
