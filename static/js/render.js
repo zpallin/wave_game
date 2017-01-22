@@ -121,6 +121,7 @@ Animation.prototype.update = function(dt) {
 	// dx multiplied by fps multiplied by this.w
   // also multiple by size, which is a ratio of current size to default size
 	if (this.dt > 1 / (this.fps * this.speed)) {
+    console.log(this.speed);
 		this.idx++;
 		this.dt = 0;
 	}

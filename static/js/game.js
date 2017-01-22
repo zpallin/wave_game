@@ -102,8 +102,13 @@ function run() {
       entity.pos.y = entityData.pos.y;
 
       if (entityData.size != entity.pos.w) {
-        for (var i = 0; i < entity.anims.length; i++) {
-          entity.anims[i].speed = entityData.size / assumedEntitySize;
+        console.log("update anims: " + entity.anims.length);
+        console.log(entity);
+
+        for (var key in entity.anims) {
+          var newSizeRatio = entityData.size / assumedEntitySize;
+          console.log(newSizeRatio);
+          entity.anims[key].speed = assumedEntitySize / entityData.size;
         }
       }
 

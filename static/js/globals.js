@@ -6,7 +6,7 @@ var ctx = canvas.getContext('2d');
 var entityMap = {};
 var entityLayers = [{}, {}];
 var socket = io.connect('/');
-var assumeEntitySize = 60;
+var assumedEntitySize = 60;
 
 //images
 var sandImg = new Image();
