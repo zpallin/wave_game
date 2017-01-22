@@ -13,7 +13,7 @@ function Player(entity, speed) {
   this.entity = entity;
   this.attackFrameStart = 2;
   this.resetAttack();
-  this.runThrough = ['burrow', 'attackRight', 'attackLeft','knockBackLeft','knockBackRight'];
+  this.runThrough = ['burrow', 'attackRight', 'attackLeft','knockBackLeft','knockBackRight', 'washOut'];
   this.hasDamaged = false;
   this.animLength = 1;
 }

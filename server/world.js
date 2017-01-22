@@ -301,7 +301,7 @@ class World {
   getEntitiesInWater() {
     // This assumes entities will not be larger than two grid tiles.
     let gridRange = Math.floor(this.waterHeight / GRID_SIZE)+2;
-    
+     
     let resultList = [];
     for (let x = 0; x < WORLD_GRID_WIDTH; ++x) {
       for (let y = WORLD_GRID_HEIGHT-gridRange; y < WORLD_GRID_HEIGHT; ++y) {
@@ -315,7 +315,7 @@ class World {
         }
       }
     }
-    return entityList;
+    return resultList;
   }
 
   update() {
@@ -347,8 +347,9 @@ class World {
         this.notifyAllPlayers('water_height', this.waterHeight);
 
         // loop through and washout all entities
-        getEntitiesInWater().forEach(function(entity) {
+        this.getEntitiesInWater().forEach(function(entity) {
           if (entity.constructor.name === 'PlayerEntity' && !entity.isBurrowed && !entity.isWashedOut) {
+            console.log("Washout:" + entity);
             entity.setState('washOut');
             entity.isWashedOut = true;
           }
