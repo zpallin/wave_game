@@ -4,10 +4,10 @@ Hermit Carnage
 Contributors
 ------------
 
-Jeff Houde (lochemage)
-Jesus Nevarez (friendlyfoe)
-Jazmine Moore (jmoore)
-Zach Pallin (zpallin)
+ - Jeff Houde (lochemage): Game Development, Mostly server side
+ - Jesus Nevarez (friendlyfoe): Environment Artist
+ - Jazmine Moore (jmoore): Character artist
+ - Zach Pallin (zpallin): Game Devleopment, Client side and bugs
 
 Instructions
 ------------
