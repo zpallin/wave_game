@@ -47,7 +47,11 @@ class PlayerEntity extends EntityBase {
       this.world.notifyAllPlayers('entity_state', {
         id: hitList[i].id,
         state: koState,
+        animLengthMod: pos.w,
       });
+      var modDistance = pos.d * pos.w * 2;
+      console.log('attack: '+ modDistance);
+      hitList[i].setPos({x:hitList[i].pos.x + modDistance, y: hitList[i].pos.y});
     }
 
     // Notify everyone to play a particle effect.

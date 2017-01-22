@@ -15,6 +15,7 @@ function Player(entity, speed) {
   this.resetAttack();
   this.runThrough = ['burrow', 'attackRight', 'attackLeft','knockBackLeft','knockBackRight'];
   this.hasDamaged = false;
+  this.animLength = 1;
 }
 
 Player.prototype.modSpeed = function() {
@@ -38,7 +39,7 @@ Player.prototype.attack = function(dt) {
       socket.emit('player_damage', {
           x: this.pos.x + this.pos.w / 4,
           y: this.pos.y + this.pos.h / 4,
-          w: this.pos.w / 12,
+          w: this.pos.w / 4,
           h: this.pos.h,
           d: 1
       });
@@ -52,7 +53,7 @@ Player.prototype.attack = function(dt) {
       socket.emit('player_damage', {
         x: this.pos.x - this.pos.w / 4,
         y: this.pos.y - this.pos.h / 4,
-        w: this.pos.w,
+        w: this.pos.w / 4,
         h: this.pos.h,
         d: -1
       });
