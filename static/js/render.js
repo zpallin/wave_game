@@ -79,12 +79,13 @@ AnimationColor.prototype.draw = function() {
 ////////////////////////////////////////////////////////////////////////////////
 // animation object
 
-function Animation(img, fw, fh, fps, loop, seq) {
+function Animation(img, fw, fh, fps, mirror, loop, seq) {
 	this.img = img;
 	this.seq = [];
 	this.w = fw;
 	this.h = fh;
 
+  this.mirror = mirror;
   this.fullSeq = [];
 
   for (var i = 0; i < this.img.width; i+=fw) {
@@ -113,8 +114,6 @@ Animation.prototype.reset = function() {
 }
 Animation.prototype.update = function(dt) {
 	this.dt += dt;
-  if (!this.loop)
-    console.log(this.idx);
 	// the index should be incrementing by no more than the integer value of
 	// dx multiplied by fps multiplied by this.w
 	if (this.dt > 1 / this.fps) {
@@ -128,7 +127,6 @@ Animation.prototype.update = function(dt) {
 	
   // if it's not, figure out if the animation should return false
   }	else if (this.idx > this.seq.length) {
-    console.log(this.idx);
     this.reset();
 		return false;
 	}
@@ -136,5 +134,10 @@ Animation.prototype.update = function(dt) {
 }
 
 Animation.prototype.draw = function() {
-  ctx.drawImage(this.img, this.seq[this.idx], 0, this.w, this.h, 0, 0, this.w, this.h);
+  var w = this.w;
+  if (this.mirror) {
+    ctx.scale(-1,1);
+    ctx.translate(-w,0);
+  }
+  ctx.drawImage(this.img, this.seq[this.idx], 0, w, this.h, 0, 0, this.w, this.h);
 }

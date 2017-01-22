@@ -55,11 +55,11 @@ function returnDefaultEntities(type) {
     case 'PlayerEntity': 
       return {
         'idle': new Animation( hermitIdleDown, 500, 333, 5),
-        'left': new Animation( hermitWalkRight, 500, 333),
-        'right': new Animation( hermitWalkRight, 500, 333),
+        'left': new Animation( hermitWalkRight, 500, 333, 15, true),
+        'right': new Animation( hermitWalkRight, 500, 333, 15, false),
         'up': new Animation( hermitIdleDown, 500, 333),
-        'down': new Animation( hermitIdleDown, 500, 333),
-        'burrow': new Animation( hermitIdleDown, 500, 333, 5, false, [1,1,1,1,1,1,1]),
+        'down': new Animation( hermitIdleDown, 500, 333, 15, true),
+        'burrow': new Animation( hermitIdleDown, 500, 333, 5, false, false, [1,1,1,1,1,1,1]),
       };
       break;
     case 'FoodEntity': 
