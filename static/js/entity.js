@@ -30,10 +30,11 @@ Entity.prototype.update = function(dt, x, y) {
   }
 } 
 
-Entity.prototype.render = function() {
+Entity.prototype.render = function(name) {
   if (!(this.state in this.anims)) {
     return false;
   }
+  
   var anim = this.anims[this.state];
   
   ctx.save();

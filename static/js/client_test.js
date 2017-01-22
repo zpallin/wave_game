@@ -16,6 +16,7 @@ function render(dt) {
 }
 
 function update(dt) {
+  world.update();
   if (typeof player !== 'undefined') {
     player.update(dt);
     helpers.clamp(player.pos,world.pos);
@@ -60,8 +61,8 @@ function run() {
     // get entity here
     var pos = {x:0, y:0, w: entityData.size, h: entityData.size};
     entityList[entityData.id] = new Entity(pos, returnDefaultEntities(entityData.type));
-    console.log("ENTITY CONNECTED");
-    console.log(entityList);
+    //console.log("ENTITY CONNECTED");
+    //console.log(entityList);
   });
 
   // existing entity left the game.
@@ -71,8 +72,8 @@ function run() {
 
   // Your identifier
   socket.on('set_identity', function(id) {
-    console.log(entityList[id]);
-    console.log('set identity id: ' + id);
+    //console.log(entityList[id]);
+    //console.log('set identity id: ' + id);
     var pos = {x:0, y:0, w: entityList[id].pos.w, h: entityList[id].pos.h};
     player = new Player(entityList[id]);
     camera.setEntity(player.entity);
@@ -85,6 +86,7 @@ function run() {
   socket.on('entity_moved', function(entityData) {
     var entity = entityList[entityData.id];
     if (entity) {
+      helpers.clamp(entity.pos,world.pos);
       entity.pos.x = entityData.pos.x;
       entity.pos.y = entityData.pos.y;
     }
@@ -94,8 +96,8 @@ function run() {
   socket.on('entity_hidden', function(id) {
     var entity = entityList[id];
     if (entity) {
-      entity.x = -10000;
-      entity.y = -10000;
+      entity.x = 0;
+      entity.y = 0;
     }
   });
 }

@@ -13,5 +13,5 @@ World.prototype.update = function(dt) {
 }
 
 World.prototype.render = function() {
-  this.entity.render(); 
+  this.entity.render("world"); 
 }

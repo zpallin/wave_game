@@ -64,5 +64,7 @@ Player.prototype.move = function() {
 			newState = 'burrow';
 		}
 	}
+  //console.log(this.pos);
 	this.entity.setState(newState);
+  socket.emit('player_move', {x: this.pos.x, y: this.pos.y});
 }
