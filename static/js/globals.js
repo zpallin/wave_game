@@ -15,6 +15,9 @@ sandImg.src = '/img/sand.jpg';
 var waterImg = new Image();
 waterImg.src = '/img/water.jpg';
 
+var fogImg = new Image();
+fogImg.src = '/img/fog.jpg';
+
 var hermitIdleDown = new Image();
 hermitIdleDown.src = '/img/hermit_idle_down.png';
 

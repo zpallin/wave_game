@@ -34,10 +34,4 @@ Water.prototype.render = function() {
     }
   }
   this.waterAnim.idx = idx;
-
-  // ctx.save();
-  // // ctx.fillStyle = 'blue';
-  // ctx.globalAlpha = 0.8;
-  // ctx.fillRect(this.pos.x, (this.pos.y + this.pos.h) - this.height, this.pos.w, this.height + 100);
-  // ctx.restore();
 }
