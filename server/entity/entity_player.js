@@ -6,6 +6,9 @@ class PlayerEntity extends EntityBase {
   constructor(world, io) {
     super(world, io);
 
+    this.isBurrowed = false;
+    this.breath = 100;
+
     this.io.emit('set_identity', this.id);
 
     this.io.on('player_move', this.setPos.bind(this));

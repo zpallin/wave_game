@@ -33,12 +33,16 @@ function generateUniqueId(map) {
 class EntityBase {
   constructor(world, io = null) {
     this.id = generateUniqueId(entityMap);
-    this.io = io;
+    this.io = io; // sockets
     this.pos = {x: 0, y: 0};
-    this.size = {x: 0, y: 0};
+    this.radius = 15; // Pixel radius of entity
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    this.world = world;
+    this.world = world; // The world instance this entity is in
     this.world.addEntity(this);
+    this.force = { // Force applied due to collision
+      x: 0,
+      y: 0
+    };
 
     entityMap[this.id] = this;
   }
@@ -54,10 +58,10 @@ class EntityBase {
   // Retrieve the data needed for a client to know this entity.
   clientData() {
     return {
-      id:    this.id,
-      pos:   this.pos,
-      size:  this.size,
-      color: this.color
+      id:     this.id,
+      pos:    this.pos,
+      radius: this.radius,
+      color:  this.color
     };
   }
 
@@ -69,10 +73,7 @@ class EntityBase {
     this.pos.x = pos.x;
     this.pos.y = pos.y;
 
-    this.world.notifyNearbyPlayers('entity_moved', {
-      id: this.id,
-      pos: this.pos
-    });
+    this.world.onEntityMoved(this);
   }
 };
 
