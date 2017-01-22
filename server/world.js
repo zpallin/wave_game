@@ -305,6 +305,7 @@ class World {
     console.log("food count: " + foodCount + " / " + this.existingFoodCount);
     for (var i = 0; i < foodCount; i++, this.existingFoodCount++) {
       var food = new FoodEntity(this);
+      food.setSize(10);
 
       // randomly generate x and y
       var x = Math.floor(Math.random() * (WORLD_GRID_WIDTH * GRID_SIZE));
