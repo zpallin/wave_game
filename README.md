@@ -1,6 +1,9 @@
 Hermit Carnage
 ==============
 
+
+<img src="https://github.com/zpallin/wave_game/blob/master/static/img/title.png?raw=true", width:"300px" />
+
 Contributors
 ------------
 
