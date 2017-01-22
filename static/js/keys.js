@@ -22,7 +22,6 @@ Keys.prototype.register = function(reg) {
 }
 // adds event listeners that are registered
 Keys.prototype.setListeners = function() {
-  console.log(this.registry);
   var registry = this.registry;
   var onkey = function(keyCode, mode) {
 		var n, k;
