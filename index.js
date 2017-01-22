@@ -28,6 +28,10 @@ worldList.push(new World(io));
 // server
 
 app.get('/', function(req, res) {
+  res.render('landing', { title: 'Hermit Carnage', worldSize: worldSize});
+});
+
+app.get('/play', function(req, res) {
   res.render('index', { title: 'Hermit Carnage', worldSize: worldSize});
 });
 
