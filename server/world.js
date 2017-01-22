@@ -116,6 +116,7 @@ class World {
       if (index > -1) {
         trackedGrid.entityList.splice(index, 1);
       }
+      delete entityTracker[entity.id];
     }
 
     if (entity.constructor.name === 'FoodEntity') {
