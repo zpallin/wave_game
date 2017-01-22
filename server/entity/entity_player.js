@@ -17,8 +17,18 @@ class PlayerEntity extends EntityBase {
     this.io.on('player_state', this.setState.bind(this));
     this.io.on('player_damage', this.damage.bind(this));
     this.io.on('disconnect', this.destroy.bind(this));
-    this.io.on('burrow', this.setState.bind(this));
+    this.io.on('burrow', this.setBurrowed.bind(this));
+    this.io.on('un_burrow', this.unBurrow.bind(this));
     this.io.on('wash_out', this.setState.bind(this));
+  }
+
+  unBurrow() {
+    this.isBurrowed = false;
+  }
+
+  setBurrowed() {
+    this.setState('burrow');
+    this.isBurrowed = true; 
   }
 
   update(elapsed) {

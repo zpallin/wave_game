@@ -16,6 +16,7 @@ function Player(entity, speed) {
   this.runThrough = ['burrow', 'attackRight', 'attackLeft','knockBackLeft','knockBackRight', 'washOut'];
   this.hasDamaged = false;
   this.animLength = 1;
+  this.isBurrowed = false;
 }
 
 Player.prototype.modSpeed = function() {
@@ -121,7 +122,6 @@ Player.prototype.move = function(bounds) {
     }
 		if (this.burrow) {
 			newState = 'burrow';
-      socket.emit('burrow','burrow');
 		}
     if (this.attackRight) {
       console.log(this.attackRight);
@@ -136,6 +136,18 @@ Player.prototype.move = function(bounds) {
       this.hasDamaged = false;
     }
 	}
+
+  if (this.entity.state === 'burrow') {
+    
+    if (this.entity.anims['burrow'].idx > 1 && this.isBurrowed === false) {
+      socket.emit('burrow');
+      this.isBurrowed = true;
+    }
+    if (this.entity.anims['burrow'].idx > this.entity.anims['burrow'].seq.length - 2) {
+      socket.emit('un_burrow');
+      this.isBurrowed = false;
+    }
+  }
   console.log(newState);
 /*
   if (newState === 'knockBackLeft') {
