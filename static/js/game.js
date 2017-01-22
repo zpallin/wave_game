@@ -19,6 +19,7 @@ function render() {
 
 function update(dt) {
   camera.follow(dt);
+  water.update(dt);
   for (var layer = 0; layer < entityLayers.length; ++layer) {
     var map = entityLayers[layer];
     for (var id in map) {
@@ -57,6 +58,8 @@ function reset() {
 }
 
 function run() {
+  socket = io.connect('/');
+
   var now = null;
   var last = new Date().getTime();
   var dt = 0;
@@ -143,4 +146,12 @@ function run() {
   });
 }
 
-run();
+if (document.addEventListener) {
+  document.addEventListener('DOMContentLoaded', run, false);
+} else if (window.addEventListener) {
+  window.addEventListener('load', run, false);
+} else if (document.attachEvent) {
+  document.attachEvent('onreadystatechange', run);
+} else if (window.attachEvent) {
+  window.attachEvent('onload', run);
+}
