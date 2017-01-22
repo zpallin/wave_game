@@ -348,8 +348,9 @@ class World {
 
         // loop through and washout all entities
         getEntitiesInWater().forEach(function(entity) {
-          if (entity.state !== 'borrow') {
+          if (entity.constructor.name === 'PlayerEntity' && !entity.isBurrowed && !entity.isWashedOut) {
             entity.setState('washOut');
+            entity.isWashedOut = true;
           }
         });
         break;
