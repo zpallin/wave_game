@@ -121,6 +121,7 @@ Player.prototype.move = function(bounds) {
     }
 		if (this.burrow) {
 			newState = 'burrow';
+      socket.emit('burrow','burrow');
 		}
     if (this.attackRight) {
       console.log(this.attackRight);
