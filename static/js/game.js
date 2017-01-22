@@ -94,7 +94,7 @@ function run() {
   var isReloading = false;
   socket.on('connect', function() {
     if (isReloading) {
-      location.reload();
+      location = '/';
     }
   });
 
@@ -114,7 +114,7 @@ function run() {
   // existing entity left the game.
   socket.on('entity_disconnected', function(id) {
     if (id === player.entity.id) {
-      location.reload();
+      location = '/';
     }
     var entity = entityMap[id];
     if (entity) {
