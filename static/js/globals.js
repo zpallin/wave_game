@@ -42,6 +42,9 @@ hermitAttackLeft.src = '/img/hermit_attack_down-left.png';
 var hermitWalkUp = new Image();
 hermitWalkUp.src = '/img/hermit_walk_up.png';
 
+var hermitBurrow = new Image();
+hermitBurrow.src = '/img/hermit_burrow_front.png';
+
 var rockSprite = new Image();
 rockSprite.src = '/img/Rock_Sprite.png';
 
