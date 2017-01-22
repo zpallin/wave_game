@@ -26,3 +26,9 @@ hermitWalkRight.src = '/img/hermit_walk_right.png';
 
 var scratchImg = new Image();
 scratchImg.src = '/img/scratch.png';
+
+var hermitWalkDown = new Image();
+hermitWalkDown.src = '/img/hermit_walk_down.png';
+
+var hermitWalkLeft = new Image();
+hermitWalkLeft.src = '/img/hermit_walk_left.png';
