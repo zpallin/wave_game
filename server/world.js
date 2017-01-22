@@ -14,7 +14,7 @@ const WORLD_GRID_HEIGHT = 5;
 const CAMERA_GRID_WIDTH = 5;
 const CAMERA_GRID_HEIGHT = 5;
 
-const VIEW_DISTANCE = 300;
+const TEMP_VIEW_RANGE = 10000;
 
 const WAVE_SPEED = GRID_SIZE * WORLD_GRID_HEIGHT / 2;
 const WAVE_TIME = 5000;
@@ -24,6 +24,9 @@ const WAVE_STATE_IDLE = 0;
 const WAVE_STATE_FLOODING = 1;
 const WAVE_STATE_RECEEDING = 2;
 
+// food amounts
+const FOOD_RAND_MAX = Math.floor(WORLD_GRID_WIDTH * GRID_SIZE / 100);
+const FOOD_RAND_MIN = Math.floor(FOOD_RAND_MAX / 2);
 
 // Maps for keeping track of things
 let worldMap = {};
@@ -40,6 +43,9 @@ class World {
     this.io = io;
     this.entityList = [];
     this.waterHeight = 0;
+
+    // food count
+    this.existingFoodCount = 0;
 
     // Construct our world grid.
     this.grid = [];
@@ -137,32 +143,23 @@ class World {
       gridSpace.entityList.push(entity);
 
       let removedEntityList = this.getEntitiesInRange(
-        entity.pos, VIEW_DISTANCE, VIEW_DISTANCE + GRID_SIZE, false, entity.id);
+        entity.pos, TEMP_VIEW_RANGE, TEMP_VIEW_RANGE + GRID_SIZE, false, entity.id);
 
       removedEntityList.forEach((removedEntity)=> {
         if (removedEntity.io) {
           removedEntity.io.emit('entity_hidden', entity.id);
         }
-        if (entity.io) {
-          entity.io.emit('entity_hidden', removedEntity.id);
-        }
       });
     }
 
     let notifyEntityList = this.getEntitiesInRange(
-      entity.pos, 0, VIEW_DISTANCE, false);
+      entity.pos, 0, TEMP_VIEW_RANGE, false);
 
     notifyEntityList.forEach((notifyEntity)=> {
       if (notifyEntity.io) {
         notifyEntity.io.emit('entity_moved', {
           id: entity.id,
           pos: entity.pos
-        });
-      }
-      if (entity.io) {
-        entity.io.emit('entity_moved', {
-          id: notifyEntity.id,
-          pos: notifyEntity.pos
         });
       }
     });
@@ -196,8 +193,8 @@ class World {
             // The first test is checking within a square on the x and y distance.
             let w = Math.abs(entity.pos.x - pos.x);
             let h = Math.abs(entity.pos.y - pos.y);
-            if (w - (entity.size/2) > maxRange || h - (entity.size/2) > maxRange ||
-               (w + (entity.size/2) < minRange && h + (entity.size/2) < minRange)) {
+            if (w - (entity.size/2) > maxRange || w + (entity.size/2) < minRange ||
+                h - (entity.size/2) > maxRange || h + (entity.size/2) < minRange) {
               return;
             }
 
@@ -268,6 +265,7 @@ class World {
         if (this.waterHeight > GRID_SIZE * WORLD_GRID_HEIGHT) {
           this.waterHeight = GRID_SIZE * WORLD_GRID_HEIGHT;
           this.waveState = WAVE_STATE_RECEEDING;
+          this.spawnFood();
         }
         this.notifyAllPlayers('water_height', this.waterHeight);
         break;
@@ -286,6 +284,25 @@ class World {
         this.notifyAllPlayers('fog_intensity', fogIntensity);
         break;
       }
+    }
+  }
+  spawnFood() {
+    var foodCount = Math.floor(Math.random() * (FOOD_RAND_MIN - FOOD_RAND_MAX)) + FOOD_RAND_MIN;
+    if ((foodCount + this.existingFoodCount) > FOOD_RAND_MAX) {
+      foodCount = FOOD_RAND_MAX - this.existingFoodCount;
+    }
+    for (var i = 0; i < foodCount; i++, this.existingFoodCount++) {
+      var food = new FoodEntity(this);
+
+      // randomly generate x and y
+      var x = Math.floor(Math.random() * (WORLD_GRID_WIDTH * GRID_SIZE));
+
+      // y is harder
+      var gridHeight = Math.floor(WORLD_GRID_HEIGHT * GRID_SIZE);
+      var bottomRange = Math.floor(Math.random() * (gridHeight / 3));
+      var midRange = Math.floor(Math.random() * (gridHeight / 5));
+      var y = gridHeight - bottomRange - midRange;
+      food.setPos({x:x, y:y});
     }
   }
 }
