@@ -47,7 +47,10 @@ function AnimationColor(colors, pos, loop, tpf) {
   if (this.colors.length === 0) {
     this.colors = ["#ff0000"];
   }
+
+  this.reset();
 }
+
 AnimationColor.prototype.update = function(dt) {
  
   x = typeof x === 'undefined' ? 0 : x;
@@ -104,6 +107,7 @@ function Animation(img, fw, fh, fps, loop, seq) {
 
 	this.fps = typeof fps === 'undefined' ? 15 : fps;
 	this.loop = typeof loop === 'undefined' ? true : loop;
+  this.reset();
 }
 Animation.prototype.reset = function() {
 	this.dt = 0;

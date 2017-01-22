@@ -29,7 +29,6 @@ function Player(entity, speed) {
 Player.prototype.update = function(dt) {
   this.move();
   this.entity.update(dt);
-  console.log(this.pos);
 }
 
 Player.prototype.render = function() {
