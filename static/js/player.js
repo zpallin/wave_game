@@ -14,6 +14,7 @@ function Player(entity, speed) {
   this.attackFrameStart = 2;
   this.resetAttack();
   this.runThrough = ['burrow', 'attackRight', 'attackLeft'];
+  this.hasDamaged = false;
 }
 
 Player.prototype.modSpeed = function() {
@@ -27,29 +28,33 @@ Player.prototype.updateControls = function(dt, bounds) {
 }
 
 Player.prototype.attack = function(dt) {
+  if (this.hasDamaged) {
+    return;
+  }
+
   if (this.entity.state === 'attackRight') {
     var animIdx = this.entity.anims['attackRight'].idx;
-
     if (animIdx > this.attackFrameStart) {
-      socket.emit('player_attack_zone', {
+      socket.emit('player_damage', {
           x: this.pos.x + this.pos.w / 2,
           y: this.pos.y + this.pos.h / 2,
           w: this.pos.w / 12,
-          h: this.pos.h,
+          h: this.pos.h
       });
+      this.hasDamaged = true;
     }
-
   }
   if (this.entity.state === 'attackLeft') {
     var animIdx = this.entity.anims['attackLeft'].idx;
     
     if (animIdx > this.attackFrameStart) {
-      socket.emit('player_attack_zone', {
+      socket.emit('player_damage', {
         x: this.pos.x - this.pos.w / 2,
         y: this.pos.y - this.pos.h / 2,
         w: this.pos.w / 12,
-        h: this.pos.h,
+        h: this.pos.h
       });
+      this.hasDamaged = true;
     }
   }
 }
@@ -117,10 +122,14 @@ Player.prototype.move = function(bounds) {
     if (this.attackRight) {
       console.log(this.attackRight);
       newState = 'attackRight';
+      socket.emit('player_state', 'attackRight');
+      this.hasDamaged = false;
     }
     if (this.attackLeft) {
       console.log(this.attackLeft);
       newState = 'attackLeft';
+      socket.emit('player_state', 'attackLeft');
+      this.hasDamaged = false;
     }
 	}
 
