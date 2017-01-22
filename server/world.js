@@ -41,7 +41,7 @@ class World {
     this.waveState = WAVE_STATE_IDLE;
 
     this.io = io;
-    this.entityList = [];
+    this.entityMap = {};
     this.waterHeight = 0;
 
     // food count
@@ -77,7 +77,7 @@ class World {
   }
 
   addEntity(entity) {
-    if (this.entityList.indexOf(entity) > -1) {
+    if ({}.hasOwnProperty.call(this.entityMap, entity.id)) {
       return false;
     }
 
@@ -86,14 +86,16 @@ class World {
       entity.io.join(this.id);
 
       // Now notify the newly added player of all the other entities in the world.
-      this.entityList.forEach((other)=> {
-        entity.io.emit('entity_connected', other.clientData());
-      });
+      for (let other in this.entityMap) {
+        if ({}.hasOwnProperty.call(this.entityMap, other)) {
+          entity.io.emit('entity_connected', this.entityMap[other].clientData());
+        }
+      }
     }
 
     this.notifyAllPlayers('entity_connected', entity.clientData());
 
-    this.entityList.push(entity);
+    this.entityMap[entity.id] = entity;
     console.log(`${entity.constructor.name} ${entity.id} joined world ${this.id}`);
 
     // Update the tracking for this entity
@@ -102,18 +104,32 @@ class World {
   }
 
   removeEntity(entity) {
-    let index = this.entityList.indexOf(entity);
-    if (index === -1) {
+    if (!{}.hasOwnProperty.call(this.entityMap, entity.id)) {
       return false;
     }
 
     console.log(`Entity ${entity.id} left world ${this.id}`);
-    this.entityList.splice(index, 1);
+
+    let trackedGrid = entityTracker[entity.id];
+    if (trackedGrid) {
+      let index = trackedGrid.entityList.indexOf(entity);
+      if (index > -1) {
+        trackedGrid.entityList.splice(index, 1);
+      }
+      delete entityTracker[entity.id];
+    }
+
+    if (entity.constructor.name === 'FoodEntity') {
+      this.existingFoodCount--;
+    }
+
+    delete this.entityMap[entity.id];
     // If this entity has a socket connection, disconnect from our worlds channel.
     if (entity.io) {
       entity.io.leave(this.id);
-      this.notifyAllPlayers('entity_disconnected', entity.id);
     }
+
+    this.notifyAllPlayers('entity_disconnected', entity.id);
   }
 
   // Event handler when an entity has moved.
@@ -174,6 +190,22 @@ class World {
         })
       }
     });
+
+    // Only players from this point on!
+    if (entity.constructor.name === 'PlayerEntity') {
+      let touchedEntityList = this.getEntitiesInRange(
+        entity.pos, 0, entity.size/2, true, entity.id);
+      touchedEntityList.forEach((touched)=> {
+        switch (touched.constructor.name) {
+          // Pick up food and grow bigger.
+          case 'FoodEntity': {
+            touched.destroy();
+            entity.setSize(entity.size + 5);
+            break;
+          }
+        }
+      });
+    }
   }
 
   // Finds the grid tile position for a given world position.
