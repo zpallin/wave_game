@@ -142,9 +142,13 @@ Animation.prototype.update = function(dt) {
 
 Animation.prototype.draw = function() {
   var w = this.w;
-  if (this.mirror) {
+  if (this.mirror === true) {
     ctx.scale(-1,1);
     ctx.translate(-w,0);
+  }
+  if (this.mirror === 'vertical') {
+    ctx.scale(1,-1);
+    ctx.translate(0,-this.h);
   }
   ctx.drawImage(this.img, this.seq[this.idx], 0, w, this.h, 0, 0, this.w, this.h);
 }

@@ -333,6 +333,13 @@ class World {
           this.spawnFood();
         }
         this.notifyAllPlayers('water_height', this.waterHeight);
+
+        // loop through and washout all entities
+        getEntitiesInWater().forEach(function(entity) {
+          if (entity.state !== 'borrow') {
+            entity.setState('washOut');
+          }
+        });
         break;
       }
 
@@ -350,6 +357,8 @@ class World {
         break;
       }
     }
+
+    
   }
   spawnFood() {
     var foodCount = Math.floor(Math.random() * (FOOD_RAND_MIN - FOOD_RAND_MAX)) + FOOD_RAND_MIN;
