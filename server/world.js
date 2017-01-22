@@ -242,14 +242,6 @@ class World {
     };
   }
 
-  getEntities() {
-    let entityList = [];
-    for (let entity in this.entityMap) {
-      entityList.push(this.entityMap[entity]);
-    }
-    return entityList;
-  }
-
   // Finds all entities within a certain pixel range of a position
   getEntitiesInRange(pos, minRange, maxRange, exact, ignoredEntityId) {
     let gridPos = this.getGridPos(pos);
@@ -349,7 +341,7 @@ class World {
         // loop through and washout all entities
         this.getEntitiesInWater().forEach(function(entity) {
           if (entity.constructor.name === 'PlayerEntity' && !entity.isBurrowed && !entity.isWashedOut) {
-            console.log("Washout:" + entity);
+            console.log("Washout:" + entity.id);
             entity.setState('washOut');
             entity.isWashedOut = true;
           }
@@ -358,7 +350,8 @@ class World {
       }
 
       case WAVE_STATE_RECEEDING: {
-        this.waterHeight -= (elapsed / 1000) * WAVE_SPEED;
+        let distance = (elapsed / 1000) * WAVE_SPEED;
+        this.waterHeight -= distance;
         if (this.waterHeight <= 0) {
           this.waterHeight = 0;
           this.waveState = WAVE_STATE_IDLE;
@@ -368,6 +361,22 @@ class World {
 
         let fogIntensity = this.waterHeight / (GRID_SIZE * WORLD_GRID_HEIGHT);
         this.notifyAllPlayers('fog_intensity', fogIntensity);
+
+        for (let name in this.entityMap) {
+          let entity = this.entityMap[name];
+          if (entity.constructor.name === 'PlayerEntity' && entity.isWashedOut) {
+            if (entity.pos.y - 100 < (GRID_SIZE * WORLD_GRID_HEIGHT) - this.waterHeight) {
+              entity.setPos({
+                x: entity.pos.x,
+                y: entity.pos.y + distance
+              }, true);
+
+              if (this.waterHeight <= 0) {
+                this.notifyAllPlayers('entity_disconnected', entity.id);
+              }
+            }
+          }
+        };
         break;
       }
     }

@@ -8,7 +8,7 @@ class PlayerEntity extends EntityBase {
     super(world, layerType.LAYER_HERMIT, io);
 
     this.isBurrowed = false;
-    this.breath = 100;
+    this.isWashedOut = false;
     this.score = 0;
 
     this.io.emit('set_identity', this.id);
@@ -20,15 +20,6 @@ class PlayerEntity extends EntityBase {
     this.io.on('burrow', this.setBurrowed.bind(this));
     this.io.on('un_burrow', this.unBurrow.bind(this));
     this.io.on('wash_out', this.setState.bind(this));
-  }
-
-  unBurrow() {
-    this.isBurrowed = false;
-  }
-
-  setBurrowed() {
-    this.setState('burrow');
-    this.isBurrowed = true; 
   }
 
   update(elapsed) {
@@ -46,6 +37,15 @@ class PlayerEntity extends EntityBase {
       id: this.id,
       state: stateName
     });
+  }
+
+  unBurrow() {
+    this.isBurrowed = false;
+  }
+
+  setBurrowed() {
+    this.isBurrowed = true;
+    this.setState('burrow');
   }
 
   damage(pos) {
