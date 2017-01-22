@@ -26,7 +26,7 @@ function update(dt) {
 function reset() {
   keys = new Keys();
   world = new World();
-  camera = new Camera( canvas, world.entity);
+  camera = new Camera(world.entity);
 	keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
 	keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });
 	keys.register({ keys: [KEY.W], mode: 'down', action: function() { player.up    = true;  } });
@@ -86,7 +86,7 @@ function run() {
   socket.on('entity_moved', function(entityData) {
     var entity = entityList[entityData.id];
     if (entity) {
-      helpers.clamp(entity.pos,world.pos);
+//      helpers.clamp(entity.pos,world.pos);
       entity.pos.x = entityData.pos.x;
       entity.pos.y = entityData.pos.y;
     }
@@ -96,8 +96,8 @@ function run() {
   socket.on('entity_hidden', function(id) {
     var entity = entityList[id];
     if (entity) {
-      entity.x = 0;
-      entity.y = 0;
+      entity.pos.x = 0;
+      entity.pos.y = 0;
     }
   });
 }

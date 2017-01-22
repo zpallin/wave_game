@@ -13,5 +13,10 @@ World.prototype.update = function(dt) {
 }
 
 World.prototype.render = function() {
-  this.entity.render("world"); 
+//  this.entity.render("world"); 
+  ctx.beginPath();
+  ctx.fillStyle = "blue";
+  ctx.rect(0, 0, 2000, 500);
+  ctx.fill();
+  ctx.closePath();
 }

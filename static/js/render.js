@@ -1,10 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 // camera
 
-function Camera(canvas, entity) {
-  this.canvas = canvas;
-  this.w = this.canvas.width;
-  this.h = this.canvas.height;
+function Camera(entity) {
+  this.w = canvas.width;
+  this.h = canvas.height;
   this.lerp = 8;
   this.setEntity(entity);
 }
@@ -34,6 +33,8 @@ function AnimationColor(colors, pos) {
   // iterator
   this.iter = 0; 
   this.tc = 0;
+  this.w = this.pos.w;
+  this.h = this.pos.h;
 
   // tpf setting
   this.tpf = 15;
