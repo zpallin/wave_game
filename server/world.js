@@ -16,7 +16,7 @@ const CAMERA_GRID_HEIGHT = 5;
 
 const TEMP_VIEW_RANGE = 10000;
 
-const WAVE_SPEED = 128;
+const WAVE_SPEED = 128 * 5;
 const WAVE_TIME = 5000;
 const WAVE_WARNING_TIME = 1000;
 
@@ -67,6 +67,7 @@ class World {
   // Broadcasts a message to all entities within this world.
   notifyAllPlayers(type, data) {
     this.io.to(this.id).emit(type, data);
+    // console.log(type, data);
   }
 
   addEntity(entity) {
@@ -161,8 +162,8 @@ class World {
   // Finds the grid tile position for a given world position.
   getGridPos(pos) {
     return {
-      x: Math.max(0, Math.min(WORLD_GRID_WIDTH, Math.floor(pos.x / GRID_SIZE))),
-      y: Math.max(0, Math.min(WORLD_GRID_HEIGHT, Math.floor(pos.y / GRID_SIZE)))
+      x: Math.max(0, Math.min(WORLD_GRID_WIDTH-1, Math.floor(pos.x / GRID_SIZE))),
+      y: Math.max(0, Math.min(WORLD_GRID_HEIGHT-1, Math.floor(pos.y / GRID_SIZE)))
     };
   }
 
@@ -235,47 +236,48 @@ class World {
   }
 
   update() {
-    // let time = new Date().getTime();
-    // let elapsed = time - this.lastTime;
-    // this.lastTime = time;
+    let time = new Date().getTime();
+    let elapsed = time - this.lastTime;
+    this.lastTime = time;
 
-    // switch (this.waveState) {
-    //   case WAVE_STATE_IDLE: {
-    //     this.waveTime -= elapsed;
-    //     if (this.waveTime <= 0) {
-    //       this.waveTime = WAVE_TIME;
-    //       this.isWaving;
-    //     } else if (this.waveTime <= WAVE_WARNING_TIME) {
-    //       let warningIntensity = 1.0 - (this.waveTime / WAVE_WARNING_TIME);
-    //       this.notifyAllPlayers('fog_warning', warningIntensity);
-    //     }
+    switch (this.waveState) {
+      case WAVE_STATE_IDLE: {
+        this.waveTime -= elapsed;
+        if (this.waveTime <= 0) {
+          this.waveTime = WAVE_TIME;
+          this.waveState = WAVE_STATE_FLOODING;
+        } else if (this.waveTime <= WAVE_WARNING_TIME) {
+          let fogIntensity = 1.0 - (this.waveTime / WAVE_WARNING_TIME);
+          this.notifyAllPlayers('fog_intensity', fogIntensity);
+        }
 
-    //     break;
-    //   }
-    // }
+        break;
+      }
 
-    // if (this.isWaving) {
-    //   this.waterHeight += (elapsed / 1000) * WAVE_SPEED;
-    //   if (this.waterHeight > GRID_SIZE * WORLD_GRID_HEIGHT) {
-    //     this.waterHeight = GRID_SIZE * WORLD_GRID_HEIGHT;
-    //   }
-    // } else {
-    //   if (this.waterHeight > 0) {
-    //     this.waterHeight -= (elapsed / 1000) * WAVE_SPEED;
-    //     if (this.waterHeight <= 0) {
-    //       this.waterHeight = 0;
-    //     }
-    //   } else {
-    //     this.waveTime -= elapsed;
-    //     if (this.waveTime <= 0) {
-    //       this.waveTime = WAVE_TIME;
-    //       this.isWaving;
-    //     } else if (this.waveTime <= WAVE_WARNING_TIME) {
-    //       let warningIntensity = 1.0 - (this.waveTime / WAVE_WARNING_TIME);
-    //       this.notifyAllPlayers('fog_warning', warningIntensity);
-    //     }
-    //   }
-    // }
+      case WAVE_STATE_FLOODING: {
+        this.waterHeight += (elapsed / 1000) * WAVE_SPEED;
+        if (this.waterHeight > GRID_SIZE * WORLD_GRID_HEIGHT) {
+          this.waterHeight = GRID_SIZE * WORLD_GRID_HEIGHT;
+          this.waveState = WAVE_STATE_RECEEDING;
+        }
+        this.notifyAllPlayers('water_height', this.waterHeight);
+        break;
+      }
+
+      case WAVE_STATE_RECEEDING: {
+        this.waterHeight -= (elapsed / 1000) * WAVE_SPEED;
+        if (this.waterHeight <= 0) {
+          this.waterHeight = 0;
+          this.waveState = WAVE_STATE_IDLE;
+          this.waveTime = WAVE_TIME;
+        }
+        this.notifyAllPlayers('water_height', this.waterHeight);
+
+        let fogIntensity = this.waterHeight / (GRID_SIZE * WORLD_GRID_HEIGHT);
+        this.notifyAllPlayers('fog_intensity', fogIntensity);
+        break;
+      }
+    }
   }
 }
 
