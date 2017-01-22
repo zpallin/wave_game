@@ -47,6 +47,18 @@ Player.prototype.move = function(bounds) {
 			this.pos.y -= this.speed;
 			newState = 'up';
 		}
+    if (this.right && this.up) {
+      newState = 'rightUp';
+    }
+    if (this.right && this.down) {
+      newState = 'rightDown';
+    }
+    if (this.left && this.up) {
+      newState = 'leftUp';
+    }
+    if (this.left && this.down) {
+      newState = 'rigthDown';
+    }
 		if (this.burrow) {
 			newState = 'burrow';
 		}
