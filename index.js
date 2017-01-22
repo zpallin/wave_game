@@ -42,12 +42,8 @@ server.listen(config.port, function() {
 io.sockets.on('connection', function(socket) {
   // Generate a new player entity and add them into a world
   let world = worldList[0]; // For now, just pick the first world only.
-
+  
   new PlayerEntity(world, socket);
-  socket.on('player_attack_zone', function(data) {
-    console.log(data);
-  });
-
 });
 
 

@@ -26,31 +26,27 @@ Player.prototype.updateControls = function(dt, bounds) {
 }
 
 Player.prototype.attack = function(dt) {
-  if (this.attackRight) {
-    var animIdx = this.entity.anims['attackLeft'].idx;
-    console.log('animIdx: ' + animIdx);
+  if (this.entity.state === 'attackRight') {
+    var animIdx = this.entity.anims['attackRight'].idx;
 
-    if (animIdx >= this.attackFrameStart) {
-      console.log('rightattack');
+    if (animIdx > this.attackFrameStart) {
       socket.emit('player_attack_zone', {
-        x: this.pos.x + this.pos.w / 2,
-        y: this.pos.y + this.pos.h / 2,
-        w: this.pos.w / 6,
-        h: this.pos.h / 6,
+          x: this.pos.x + this.pos.w / 2,
+          y: this.pos.y + this.pos.h / 2,
+          w: this.pos.w / 12,
+          h: this.pos.h / 6,
       });
     }
 
   }
-  if (this.attackLeft) {
+  if (this.entity.state === 'attackLeft') {
     var animIdx = this.entity.anims['attackLeft'].idx;
-    console.log('animIdx: ' + animIdx);
     
-    if (animIdx >= this.attackFrameStart) {
-      console.log('leftattack');
+    if (animIdx > this.attackFrameStart) {
       socket.emit('player_attack_zone', {
-        x: this.pos.x + this.pos.w / 2,
-        y: this.pos.y + this.pos.h / 2,
-        w: this.pos.w / 6,
+        x: this.pos.x - this.pos.w / 2,
+        y: this.pos.y - this.pos.h / 2,
+        w: this.pos.w / 12,
         h: this.pos.h / 6,
       });
     }
@@ -120,6 +116,10 @@ Player.prototype.move = function(bounds) {
     }
 	}
 
+  socket.on('attack_zone_alert', function(data) {
+    console.log('attack zone!');
+    console.log(data);
+  });
 
   helpers.clamp(this.pos, bounds);
 
