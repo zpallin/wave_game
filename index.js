@@ -31,7 +31,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/client_test', function(req, res) {
-  res.render('client_teset', { title: 'Wave IO', message: 'hello'});
+  res.render('client_test', { title: 'Wave IO', message: 'hello'});
 });
 
 server.listen(config.port, function() {
