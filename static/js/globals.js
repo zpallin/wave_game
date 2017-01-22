@@ -13,3 +13,12 @@ sandImg.src = '/img/sand.jpg';
 
 var coinImg = new Image();
 coinImg.src = '/img/coin.png';
+
+var hermitIdleDown = new Image();
+hermitIdleDown.src = '/img/hermit_idle_down.png';
+
+var hermitIdleRight = new Image();
+hermitIdleRight.src = '/img/hermit_idle_right.png';
+
+var hermitWalkRight = new Image();
+hermitWalkRight.src = '/img/hermit_walk_right.png';
