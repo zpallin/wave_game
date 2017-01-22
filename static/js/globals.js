@@ -48,6 +48,13 @@ hermitWalkUp.src = '/img/hermit_walk_up.png';
 var hermitBurrow = new Image();
 hermitBurrow.src = '/img/hermit_burrow_front.png';
 
+var hermitBurrow = new Image();
+hermitBurrow.src = '/img/hermit_burrow_front.png';
+
+var hermitSurprise = new Image();
+hermitSurprise.src = '/img/hermit_surprise.png';
+
+/*
 var rockSprite = new Image();
 rockSprite.src = '/img/Rock_Sprite.png';
 
@@ -59,3 +66,4 @@ starFishSprite.src = '/img/StarFish_Sprite.png';
 
 var twigSprite = new Image();
 twigSprite.src = '/img/Twig_Sprite.png';
+*/
