@@ -83,6 +83,12 @@ class EntityBase {
 
     this.world.onEntityMoved(this);
   }
+
+  setSize(size) {
+    this.size = size;
+
+    this.world.onEntityMoved(this);
+  }
 };
 
 module.exports = {
