@@ -125,7 +125,7 @@ Animation.prototype.update = function(dt) {
 	if (this.loop) {
 		this.idx = this.idx % this.seq.length;
 	// if it's not, figure out if the animation should return false
-  	}	else if (this.idx > this.seq.length) {
+  }	else if (this.idx > this.seq.length) {
 		return false;
 	}
 	return true;
