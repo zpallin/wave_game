@@ -58,7 +58,7 @@ class EntityBase {
       console.log('ERROR, Removing entity that was already removed!');
       return;
     }
-    console.log('destroying entity ' + this.id);
+    console.log(`destroying ${this.constructor.name} ${this.id}`);
     // Un-map our entity.
     this.world.removeEntity(this);
     delete entityMap[this.id];
@@ -81,17 +81,21 @@ class EntityBase {
 
   }
 
-  setPos(pos) {
-    this.pos.x = pos.x;
-    this.pos.y = pos.y;
+  setPos(pos, ignoreCollision) {
+    if (this.pos.x !== pos.x || this.pos.y !== pos.y) {
+      this.pos.x = pos.x;
+      this.pos.y = pos.y;
 
-    this.world.onEntityMoved(this);
+      this.world.onEntityMoved(this, ignoreCollision);
+    }
   }
 
-  setSize(size) {
-    this.size = size;
+  setSize(size, ignoreCollision) {
+    if (this.size !== size) {
+      this.size = size;
 
-    this.world.onEntityMoved(this);
+      this.world.onEntityMoved(this, ignoreCollision);
+    }
   }
 };
 

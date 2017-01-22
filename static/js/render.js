@@ -9,7 +9,10 @@ function Camera(entity) {
 }
 Camera.prototype.setEntity = function(entity) {
   this.entity = entity;
-  this.pos = this.entity.pos;
+  this.pos = {
+    x: this.entity.pos.x,
+    y: this.entity.pos.y
+  };
 }
 Camera.prototype.focus = function() {
   ctx.translate(
@@ -20,8 +23,8 @@ Camera.prototype.focus = function() {
 Camera.prototype.follow = function(dt) {
   dt = typeof dt === 'undefined' ? 0 : dt;
   // transform camera x, y toward entity x, y
-  this.x += (this.entity.x - this.pos.x) * this.lerp * dt;
-  this.y += (this.entity.y - this.pos.y) * this.lerp * dt;
+  this.pos.x += (this.entity.pos.x - this.pos.x) * this.lerp * dt;
+  this.pos.y += (this.entity.pos.y - this.pos.y) * this.lerp * dt;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

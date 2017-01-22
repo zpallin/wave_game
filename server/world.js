@@ -24,6 +24,8 @@ const WAVE_STATE_IDLE = 0;
 const WAVE_STATE_FLOODING = 1;
 const WAVE_STATE_RECEEDING = 2;
 
+const KNOCKBACK_DAMPER = 0.25;
+
 // food amounts
 const FOOD_RAND_MAX = Math.floor(WORLD_GRID_WIDTH * GRID_SIZE / 10);
 const FOOD_RAND_MIN = Math.floor(FOOD_RAND_MAX / 2);
@@ -133,7 +135,7 @@ class World {
   }
 
   // Event handler when an entity has moved.
-  onEntityMoved(entity) {
+  onEntityMoved(entity, ignoreCollision) {
     // First determine if the entity is moving into another grid space.
     let changingSpaces = true;
     let trackedGrid = entityTracker[entity.id];
@@ -192,7 +194,7 @@ class World {
     });
 
     // Only players from this point on!
-    if (entity.constructor.name === 'PlayerEntity') {
+    if (!ignoreCollision && entity.constructor.name === 'PlayerEntity') {
       let touchedEntityList = this.getEntitiesInRange(
         entity.pos, 0, entity.size/2, true, entity.id);
       let addScore = 0;
@@ -203,6 +205,22 @@ class World {
             touched.destroy();
             addScore += 0.1;
             break;
+          }
+          // Coliision with other players.
+          case 'PlayerEntity': {
+            let vec = {
+              x: entity.pos.x - touched.pos.x,
+              y: entity.pos.y - touched.pos.y
+            };
+            let ratio = entity.size / (entity.size + touched.size);
+            entity.setPos({
+              x: entity.pos.x + (vec.x * ratio) * KNOCKBACK_DAMPER,
+              y: entity.pos.y + (vec.y * ratio) * KNOCKBACK_DAMPER
+            }, true);
+            touched.setPos({
+              x: touched.pos.x - (vec.x * (1.0 - ratio)) * KNOCKBACK_DAMPER,
+              y: touched.pos.y - (vec.y * (1.0 - ratio)) * KNOCKBACK_DAMPER
+            }, true);
           }
         }
       });

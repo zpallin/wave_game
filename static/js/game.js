@@ -90,6 +90,17 @@ function run() {
     window.requestAnimationFrame(frame);
   }
 
+  var isReloading = false;
+  socket.on('connect', function() {
+    if (isReloading) {
+      location.reload();
+    }
+  });
+
+  socket.on('disconnect', function() {
+    isReloading = true;
+  });
+
   // new entity connected
   socket.on('entity_connected', function(entityData) {
     // get entity here
