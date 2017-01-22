@@ -20,6 +20,8 @@ html(lang="en")
       img(src='/img/hermit_burrow_front.png')
       img(src='/img/hermit_surprise.png')
       img(src='/img/hermit_death.png')
+    audio(loop autoplay)
+      source(src='/sound/ocean.mp3', type='audio/mpeg')
     script#worldWidth=worldSize.x
     script#worldHeight=worldSize.y
     script(src='/socket.io/socket.io.js')
