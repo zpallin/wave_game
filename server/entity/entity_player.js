@@ -39,6 +39,20 @@ class PlayerEntity extends EntityBase {
   damage(pos) {
     // TODO: Find entities in the world that are in range.
     // TODO: do damage and knockback.
+    var hitList = this.world.getEntitiesInRange(pos, 0, pos.w, true, this.id);
+
+    var koState = pos.d === 1 ? 'knockBackRight' : 'knockBackLeft';
+
+    for (var i in hitList) {
+      this.world.notifyAllPlayers('entity_state', {
+        id: hitList[i].id,
+        state: koState,
+        animLengthMod: pos.w,
+      });
+      var modDistance = pos.d * pos.w * 2;
+      console.log('attack: '+ modDistance);
+      hitList[i].setPos({x:hitList[i].pos.x + modDistance, y: hitList[i].pos.y});
+    }
 
     // Notify everyone to play a particle effect.
     this.world.notifyAllPlayers('play_particle', {

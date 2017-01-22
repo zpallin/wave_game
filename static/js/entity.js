@@ -55,18 +55,22 @@ function returnDefaultEntities(type) {
   switch(type) {
     case 'PlayerEntity': 
       return {
-        'attackLeft': new Animation( hermitWalkRight, 500, 333, 12, true, false, [1,2,3,1]),
-        'attackRight': new Animation( hermitWalkRight, 500, 333, 12, false, false, [1,2,3,1]),
+        'attackLeft': new Animation( hermitAttackRight, 500, 333, 12, false, false, [1,2,3,1]),
+        'attackRight': new Animation( hermitAttackLeft, 500, 333, 12, false, false, [1,2,3,1]),
         'idle': new Animation( hermitIdleDown, 500, 333, 5),
-        'left': new Animation( hermitWalkRight, 500, 333, 15, true),
-        'leftDown': new Animation( hermitIdleDown, 500, 333, 15, true),
-        'rightDown': new Animation( hermitIdleDown, 500, 333),
+        'idleRight': new Animation( hermitIdleRight, 500, 333, 5),
+        'idleLeft': new Animation( hermitIdleRight, 500, 333, 5, true),
+        'left': new Animation( hermitWalkLeft, 500, 333, 15),
+        'leftDown': new Animation( hermitWalkDown, 500, 333, 15, true),
+        'rightDown': new Animation( hermitWalkDown, 500, 333),
         'right': new Animation( hermitWalkRight, 500, 333, 15, false),
-        'up': new Animation( hermitIdleDown, 500, 333),
-        'leftUp': new Animation( hermitIdleDown, 500, 333, 15, true),
-        'rightUp': new Animation( hermitIdleDown, 500, 333),
-        'down': new Animation( hermitIdleDown, 500, 333, 15, true),
+        'up': new Animation( hermitWalkUp, 500, 333),
+        'leftUp': new Animation( hermitWalkUp, 500, 333, 15, true),
+        'rightUp': new Animation( hermitWalkUp, 500, 333),
+        'down': new Animation( hermitWalkDown, 500, 333, 15, true),
         'burrow': new Animation( hermitIdleDown, 500, 333, 5, false, false, [1,1,1,1,1,1,1]),
+        'knockBackRight': new Animation( hermitWalkLeft, 500, 333, 5, false, false, [1,1,1]),
+        'knockBackLeft': new Animation( hermitWalkRight, 500, 333, 5, false, false, [1,1,1]),
       };
       break;
     case 'FoodEntity': 

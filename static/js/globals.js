@@ -26,3 +26,19 @@ hermitWalkRight.src = '/img/hermit_walk_right.png';
 
 var scratchImg = new Image();
 scratchImg.src = '/img/scratch.png';
+
+var hermitWalkDown = new Image();
+hermitWalkDown.src = '/img/hermit_walk_down.png';
+
+var hermitWalkLeft = new Image();
+hermitWalkLeft.src = '/img/hermit_walk_left.png';
+
+var hermitAttackRight = new Image();
+hermitAttackRight.src = '/img/hermit_attack_down-right.png';
+
+var hermitAttackLeft = new Image();
+hermitAttackLeft.src = '/img/hermit_attack_down-left.png';
+
+var hermitWalkUp = new Image();
+hermitWalkUp.src = '/img/hermit_walk_up.png';
+
