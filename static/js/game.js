@@ -32,9 +32,16 @@ function update(dt) {
 
 function reset() {
   keys = new Keys();
-  world = new World();
-  water = new Water();
-  fog = new Fog();
+
+  var worldPos = {
+    x: 0,
+    y: 0,
+    w: parseInt(document.getElementById('worldWidth').innerText, 10),
+    h: parseInt(document.getElementById('worldHeight').innerText, 10)
+  };
+  world = new World(worldPos);
+  water = new Water(worldPos);
+  fog = new Fog(worldPos);
   camera = new Camera(world);
   keys.register({ keys: [KEY.A], mode: 'down', action: function() { player.left  = true;  } });
   keys.register({ keys: [KEY.D], mode: 'down', action: function() { player.right = true;  } });

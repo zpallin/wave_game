@@ -357,5 +357,9 @@ class World {
 }
 
 module.exports = {
-  World: World
+  World: World,
+  worldSize: {
+    x: WORLD_GRID_WIDTH * GRID_SIZE,
+    y: WORLD_GRID_HEIGHT * GRID_SIZE
+  }
 };

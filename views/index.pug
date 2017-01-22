@@ -6,8 +6,9 @@ html(lang="en")
   body
     div#container
       h1=title
-      div=message
       canvas#myCanvas(width=600,height=500)
+    script#worldWidth=worldSize.x
+    script#worldHeight=worldSize.y
     script(src='/socket.io/socket.io.js')
     script(src='/js/globals.js')
     script(src='/js/helpers.js')
