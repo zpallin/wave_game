@@ -213,14 +213,18 @@ class World {
               y: entity.pos.y - touched.pos.y
             };
             let ratio = entity.size / (entity.size + touched.size);
-            entity.setPos({
-              x: entity.pos.x + (vec.x * ratio) * KNOCKBACK_DAMPER,
-              y: entity.pos.y + (vec.y * ratio) * KNOCKBACK_DAMPER
-            }, true);
-            touched.setPos({
-              x: touched.pos.x - (vec.x * (1.0 - ratio)) * KNOCKBACK_DAMPER,
-              y: touched.pos.y - (vec.y * (1.0 - ratio)) * KNOCKBACK_DAMPER
-            }, true);
+            if (!entity.isBurrowed) {
+              entity.setPos({
+                x: entity.pos.x + (vec.x * ratio) * KNOCKBACK_DAMPER,
+                y: entity.pos.y + (vec.y * ratio) * KNOCKBACK_DAMPER
+              }, true);
+            }
+            if (!touched.isBurrowed) {
+              touched.setPos({
+                x: touched.pos.x - (vec.x * (1.0 - ratio)) * KNOCKBACK_DAMPER,
+                y: touched.pos.y - (vec.y * (1.0 - ratio)) * KNOCKBACK_DAMPER
+              }, true);
+            }
           }
         }
       });
@@ -236,6 +240,14 @@ class World {
       x: Math.max(0, Math.min(WORLD_GRID_WIDTH-1, Math.floor(pos.x / GRID_SIZE))),
       y: Math.max(0, Math.min(WORLD_GRID_HEIGHT-1, Math.floor(pos.y / GRID_SIZE)))
     };
+  }
+
+  getEntities() {
+    let entityList = [];
+    for (let entity in this.entityMap) {
+      entityList.push(this.entityMap[entity]);
+    }
+    return entityList;
   }
 
   // Finds all entities within a certain pixel range of a position
@@ -351,6 +363,7 @@ class World {
       }
     }
   }
+
   spawnFood() {
     var foodCount = Math.floor(Math.random() * (FOOD_RAND_MIN - FOOD_RAND_MAX)) + FOOD_RAND_MIN;
     if ((foodCount + this.existingFoodCount) > FOOD_RAND_MAX) {

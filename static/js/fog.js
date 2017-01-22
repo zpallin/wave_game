@@ -20,7 +20,7 @@ Fog.prototype.render = function() {
   var w = this.fogAnim.w;
   var h = this.fogAnim.h;
   for (var x = 0; x < this.pos.w; x += w) {
-    this.fogAnim.idx += 6;
+    this.fogAnim.idx += 3;
     this.fogAnim.idx %= this.fogAnim.seq.length;
 
     for (var y = 0; y < this.pos.h; y += h) {
