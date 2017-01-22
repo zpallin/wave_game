@@ -103,7 +103,7 @@ function run() {
 
       if (entityData.size != entity.pos.w) {
         for (var i = 0; i < entity.anims.length; i++) {
-          entity.anims[i].size = entityData.size / assumedEntitySize;
+          entity.anims[i].speed = entityData.size / assumedEntitySize;
         }
       }
 
