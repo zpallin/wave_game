@@ -118,12 +118,17 @@ class World {
       }
     }
 
+    if (entity.constructor.name === 'FoodEntity') {
+      this.existingFoodCount--;
+    }
+
     delete this.entityMap[entity.id];
     // If this entity has a socket connection, disconnect from our worlds channel.
     if (entity.io) {
       entity.io.leave(this.id);
-      this.notifyAllPlayers('entity_disconnected', entity.id);
     }
+
+    this.notifyAllPlayers('entity_disconnected', entity.id);
   }
 
   // Event handler when an entity has moved.
@@ -331,6 +336,7 @@ class World {
     console.log("food count: " + foodCount + " / " + this.existingFoodCount);
     for (var i = 0; i < foodCount; i++, this.existingFoodCount++) {
       var food = new FoodEntity(this);
+      food.setSize(10);
 
       // randomly generate x and y
       var x = Math.floor(Math.random() * (WORLD_GRID_WIDTH * GRID_SIZE));

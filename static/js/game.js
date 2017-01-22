@@ -100,6 +100,8 @@ function run() {
     if (entity) {
       entity.pos.x = entityData.pos.x;
       entity.pos.y = entityData.pos.y;
+      entity.pos.w = entityData.size;
+      entity.pos.h = entityData.size;
       entity.visible = true;
     }
   });
