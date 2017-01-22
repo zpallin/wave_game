@@ -54,6 +54,10 @@ class EntityBase {
   }
 
   destroy() {
+    if (!this.id) {
+      console.log('ERROR, Removing entity that was already removed!');
+      return;
+    }
     console.log('destroying entity ' + this.id);
     // Un-map our entity.
     this.world.removeEntity(this);
