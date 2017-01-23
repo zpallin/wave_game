@@ -149,21 +149,14 @@ Player.prototype.move = function(bounds) {
     }
   }
   console.log(newState);
-/*
-  if (newState === 'knockBackLeft') {
-    console.log('knock left');
-    this.pos.x -= this.modSpeed() / 4;
-  }
-  if (newState === 'knockBackRight') {
-    console.log('knock right');
-    this.pos.x += this.modSpeed() / 4;
+  
+   
+  if (['knockBackRight', 'knockBackLeft'].indexOf(this.entity.state) !== -1 && this.isBurrowed) {
+    console.log('IS BURROWED AND KNOCKED');
+    socket.emit('un_burrow');
+    this.isBurrowed = false; 
   }
 
-  socket.on('attack_zone_alert', function(data) {
-    console.log('attack zone!');
-    console.log(data);
-  });
-*/
   helpers.clamp(this.pos, bounds);
 
   //console.log(this.pos);
