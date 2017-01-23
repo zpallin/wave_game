@@ -70,8 +70,8 @@ function returnDefaultEntities(type) {
         'down': new Animation( hermitWalkDown, 500, 333, 15, true),
         'burrow': new Animation( hermitBurrow, 500, 333, 5, false, false, [0,1,2,2,2,2,2,2,2,2,2,1,0]),
         'washOut': new Animation( hermitDeath, 500, 333, 5, 'vertical', true, [0,1]),
-        'knockBackRight': new Animation( hermitSurprise, 500, 333, 5, false, false, [1,1,1]),
-        'knockBackLeft': new Animation( hermitSurprise, 500, 333, 5, false, false, [1,1,1]),
+        'knockBackRight': new Animation( hermitSurprise, 500, 333, 5, 'vertical', false, [1,1,1]),
+        'knockBackLeft': new Animation( hermitSurprise, 500, 333, 5, 'vertical', false, [1,1,1]),
       };
       break;
     case 'FoodEntity': 
