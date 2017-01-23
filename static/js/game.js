@@ -137,10 +137,10 @@ function run() {
   socket.on('entity_moved', function(entityData) {
     var entity = entityMap[entityData.id];
     if (entity) {
-      if (player && (entityData.id !== player.entity.id || player.entity.state === 'washOut')) {
+      // if (player && (entityData.id !== player.entity.id || player.entity.state === 'washOut')) {
         entity.pos.x = entityData.pos.x;
         entity.pos.y = entityData.pos.y;
-      }
+      // }
 
       if (entityData.size != entity.pos.w) {
         for (var key in entity.anims) {
