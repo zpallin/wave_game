@@ -137,7 +137,7 @@ function run() {
   socket.on('entity_moved', function(entityData) {
     var entity = entityMap[entityData.id];
     if (entity) {
-      if (player && entityData.id !== player.entity.id) {
+      if (player && (entityData.id !== player.entity.id || player.entity.state === 'washOut')) {
         entity.pos.x = entityData.pos.x;
         entity.pos.y = entityData.pos.y;
       }
