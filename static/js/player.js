@@ -26,7 +26,6 @@ Player.prototype.modSpeed = function() {
 Player.prototype.updateControls = function(dt, bounds) {
   this.move(bounds);
   this.attack(dt);
-  this.water();
 }
 
 Player.prototype.attack = function(dt) {
@@ -61,13 +60,6 @@ Player.prototype.attack = function(dt) {
       this.hasDamaged = true;
     }
   }
-}
-
-Player.prototype.water = function() {
-  if (water.height > this.pos.y && this.entity.state !== 'burrow') {
-    // emit when hit by wave
-    socket.emit('hit_by_wave', {id: this.entity.id});
-  }  
 }
 
 Player.prototype.resetAttack = function() {
@@ -122,6 +114,8 @@ Player.prototype.move = function(bounds) {
     }
 		if (this.burrow) {
 			newState = 'burrow';
+      // Tell the server that you are starting to burrow.
+      socket.emit('burrowing');
 		}
     if (this.attackRight) {
       console.log(this.attackRight);
