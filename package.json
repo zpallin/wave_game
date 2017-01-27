@@ -1,6 +1,6 @@
 {
   "name": "waveio",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "fighting game over websockets",
   "main": "index.js",
   "scripts": {
